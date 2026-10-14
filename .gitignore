@@ -3,10 +3,6 @@ node_modules/
 client/node_modules/
 server/node_modules/
 
-# Production builds (built automatically on Render)
-client/dist/
-dist/
-
 # Environment and Logs
 .env
 *.log

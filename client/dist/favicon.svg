@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#1e3a8a"/>
+      <stop offset="100%" stopColor="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="keyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stopColor="#ffffff"/>
+      <stop offset="100%" stopColor="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Badge -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)"/>
+  
+  <!-- Keyboard Chassis -->
+  <rect x="8" y="16" width="48" height="32" rx="6" fill="#0f172a" stroke="#60a5fa" stroke-width="2"/>
+  
+  <!-- Key Row 1 -->
+  <rect x="12" y="20" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="20" y="20" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="28" y="20" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="36" y="20" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="44" y="20" width="8" height="5" rx="1.5" fill="#38bdf8"/>
+  
+  <!-- Key Row 2 (Home Row) -->
+  <rect x="12" y="28" width="7" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="21" y="28" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="29" y="28" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="37" y="28" width="6" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  <rect x="45" y="28" width="7" height="5" rx="1.5" fill="url(#keyGrad)"/>
+  
+  <!-- Key Row 3 (Spacebar row) -->
+  <rect x="12" y="36" width="9" height="6" rx="1.5" fill="#64748b"/>
+  <rect x="23" y="36" width="18" height="6" rx="2" fill="#38bdf8"/>
+  <rect x="43" y="36" width="9" height="6" rx="1.5" fill="#64748b"/>
+</svg>
