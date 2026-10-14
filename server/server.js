@@ -432,19 +432,30 @@ app.get('/api/exam-rules', (req, res) => {
   });
 });
 
+// Health check endpoint for Render
+app.get('/healthz', (req, res) => res.status(200).send('OK'));
+
 // 8. Serve Production Client Build (1-Click Free Deployment)
 const clientDistPath = path.join(__dirname, '../client/dist');
 if (fs.existsSync(clientDistPath)) {
   console.log(`📦 Serving production client build from ${clientDistPath}`);
   app.use(express.static(clientDistPath));
   app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) {
+    if (req.path.startsWith('/api') || req.path.startsWith('/healthz')) {
       return next();
     }
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
+} else {
+  console.warn(`⚠️ Warning: ${clientDistPath} not found.`);
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/healthz')) {
+      return next();
+    }
+    res.send('<h3>Server is active. Client build in progress, please refresh in 30 seconds.</h3>');
+  });
 }
 
-app.listen(PORT, () => {
-  console.log(`SSC / Railway Typing Platform Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`SSC / Railway Typing Platform Server running on port ${PORT} (0.0.0.0)`);
 });
