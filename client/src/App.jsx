@@ -322,10 +322,19 @@ export default function App() {
         <ScorecardModal
           result={activeResult}
           candidateInfo={candidateInfo}
-          onClose={() => setActiveResult(null)}
-          onRetake={() => {
+          onClose={() => {
+            if (document.fullscreenElement && document.exitFullscreen) {
+              document.exitFullscreen().catch(() => {});
+            }
             setActiveResult(null);
-            // restart test
+            setActiveTab('catalog');
+          }}
+          onRetake={() => {
+            if (document.fullscreenElement && document.exitFullscreen) {
+              document.exitFullscreen().catch(() => {});
+            }
+            setActiveResult(null);
+            setActiveTab('catalog');
           }}
         />
       )}

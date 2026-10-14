@@ -21,7 +21,8 @@ import {
   Keyboard,
   Check,
   Flame,
-  HelpCircle
+  HelpCircle,
+  X
 } from 'lucide-react';
 
 export default function ScorecardModal({ result, onClose, onRetake }) {
@@ -294,11 +295,19 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
           /* ============================================================== */
           <>
             {/* Top Header Result Banner (Category-Specific Pass/Fail Verdict) */}
-            <div className={`p-6 text-white text-center border-b ${
+            <div className={`relative p-6 text-white text-center border-b ${
               result.isQualified 
                 ? 'bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 border-emerald-600' 
                 : 'bg-gradient-to-r from-rose-700 via-red-700 to-rose-800 border-rose-600'
             }`}>
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white transition z-10"
+                title="Close and return to Home / Catalog"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
               <div className="inline-flex items-center justify-center p-3 rounded-full bg-white/10 backdrop-blur-md mb-2 shadow-inner">
                 {result.isQualified ? (
                   <CheckCircle2 className="w-12 h-12 text-emerald-200" />
