@@ -309,6 +309,56 @@ export default function App() {
         </main>
       </div>
 
+      {/* Legal Fair-Use Disclaimer Footer */}
+      {activeTab !== 'test' && (
+        <footer className="bg-slate-900 border-t border-slate-800 text-slate-400 py-8 px-4 sm:px-6 lg:px-8 mt-12 select-none">
+          <div className="max-w-7xl mx-auto space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div className="flex items-center space-x-2">
+                <div className="bg-blue-600 px-2 py-1 rounded-lg text-white font-black text-xs tracking-wider">
+                  QQ
+                </div>
+                <span className="font-extrabold text-white text-sm">
+                  QQ_typing • SSC & Railway DEST Portal
+                </span>
+              </div>
+              <div className="flex items-center space-x-4 text-xs font-semibold">
+                <a 
+                  href="https://t.me/quizlauncherssc" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1"
+                >
+                  <span>Telegram: @quizlauncherssc</span>
+                </a>
+                <span className="text-slate-600">•</span>
+                <button onClick={() => setActiveTab('rules')} className="hover:text-white transition">
+                  Exam Rules
+                </button>
+              </div>
+            </div>
+
+            {/* Legal Fair Use Disclaimer */}
+            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-400 text-[11px] leading-relaxed space-y-2">
+              <p className="font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                Legal Disclaimer & Educational Fair Dealing Notice:
+              </p>
+              <p>
+                <strong>QQ_typing</strong> is an independent educational practice simulator designed solely for candidate learning, keyboard fluency, and competitive examination preparation. This platform is <strong>not affiliated with, associated with, authorized by, endorsed by, or in any way officially connected</strong> with the Staff Selection Commission (SSC), Railway Recruitment Boards (RRB), Tata Consultancy Services (TCS), Ediquity Technologies, or any government department.
+              </p>
+              <p>
+                All exam names (SSC CGL, SSC CHSL, RRB NTPC, DEST) and interface styles on this portal are referenced strictly under the <strong>Nominative Fair Use</strong> and <strong>Educational Fair Dealing doctrine (Section 52 of the Indian Copyright Act, 1957)</strong> for descriptive and academic preparation purposes only. All respective trademarks and registered marks belong exclusively to their respective institutional holders.
+              </p>
+            </div>
+
+            <div className="text-center text-[10px] text-slate-600 pt-1">
+              © {new Date().getFullYear()} QQ_typing Educational Bench. Built for Indian Government Exam Aspirants.
+            </div>
+          </div>
+        </footer>
+      )}
+
       {/* Candidate Profile / Exam Target Config Modal */}
       <CandidateModal
         isOpen={isCandidateModalOpen}

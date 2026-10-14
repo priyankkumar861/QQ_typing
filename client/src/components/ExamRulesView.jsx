@@ -230,6 +230,25 @@ export default function ExamRulesView() {
         </div>
       </div>
 
+      {/* Official Legal & Fair Use Disclaimer */}
+      <div className="bg-white border-2 border-slate-300 rounded-2xl p-6 shadow-xs space-y-3">
+        <div className="flex items-center space-x-2 text-slate-900 font-bold text-sm">
+          <ShieldCheck className="w-5 h-5 text-blue-600" />
+          <span>Legal Disclaimer & Educational Fair Dealing Notice</span>
+        </div>
+        <div className="text-xs text-slate-600 space-y-2 leading-relaxed">
+          <p>
+            <strong>QQ_typing</strong> is an independent educational platform created solely for student training, keyboard fluency, and competitive examination preparation.
+          </p>
+          <p>
+            This portal is <strong>not affiliated with, associated with, authorized by, endorsed by, or in any way officially connected</strong> with the Staff Selection Commission (SSC), Railway Recruitment Boards (RRB), Tata Consultancy Services (TCS), Ediquity Technologies, or any government ministry.
+          </p>
+          <p>
+            All exam names (SSC CGL, SSC CHSL, RRB NTPC, CBT DEST) and interface styles referenced on this platform are used strictly under the <strong>Nominative Fair Use</strong> and <strong>Educational Fair Dealing doctrine (Section 52 of the Indian Copyright Act, 1957)</strong> for descriptive and instructional benchmarking purposes only. All respective trademarks and registered marks belong exclusively to their respective institutional holders.
+          </p>
+        </div>
+      </div>
+
     </div>
   );
 }
