@@ -27,34 +27,34 @@ export default function Navbar({
 }) {
   return (
     <header className="bg-white border-b border-gray-200 text-gray-900 sticky top-0 z-40 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between min-h-16 py-1 gap-2">
           
           {/* Sidebar Toggle & Brand */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
+              className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition shrink-0"
               title="Toggle Side Navigation"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center space-x-2.5 cursor-pointer" onClick={() => setActiveTab('catalog')}>
-              <div className="bg-blue-600 p-2 rounded-xl text-white shadow-xs">
+            <div className="flex items-center space-x-2.5 cursor-pointer shrink-0 select-none" onClick={() => setActiveTab('catalog')}>
+              <div className="bg-blue-600 p-2 rounded-xl text-white shadow-xs shrink-0">
                 <Keyboard className="w-5 h-5" />
               </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-extrabold text-base sm:text-lg tracking-tight text-gray-900">
+              <div className="min-w-0">
+                <div className="flex items-center space-x-1.5 sm:space-x-2">
+                  <span className="font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-gray-900 whitespace-nowrap">
                     SSC & RRB <span className="text-blue-600">Typing Portal</span>
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 shrink-0 whitespace-nowrap">
                     CBT DEST
                   </span>
                 </div>
-                <p className="text-[11px] text-gray-500 hidden sm:block">
-                  TCS iON Pattern Exam Simulation • CGL Tier-II • RRB NTPC
+                <p className="text-[11px] text-gray-500 hidden md:block truncate max-w-[280px] lg:max-w-[340px]">
+                  TCS iON Pattern Exam Simulation • CGL Tier-II • NTPC
                 </p>
               </div>
             </div>
