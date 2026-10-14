@@ -1,0 +1,384 @@
+const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const { evaluateTyping } = require('./sscEvaluator');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+const PASSAGES_FILE = path.join(__dirname, 'passages.json');
+const HISTORY_FILE = path.join(__dirname, 'history.json');
+const USERS_FILE = path.join(__dirname, 'users.json');
+
+// Optional 100% Free MongoDB Atlas Cloud Database Integration
+let mongoDb = null;
+let mongoUsers = null;
+let mongoHistory = null;
+
+if (process.env.MONGODB_URI) {
+  try {
+    const { MongoClient } = require('mongodb');
+    const client = new MongoClient(process.env.MONGODB_URI);
+    client.connect()
+      .then(() => {
+        mongoDb = client.db('ssc_typing_portal');
+        mongoUsers = mongoDb.collection('users');
+        mongoHistory = mongoDb.collection('history');
+        console.log('✅ Successfully connected to MongoDB Atlas Cloud Database!');
+      })
+      .catch(err => {
+        console.warn('⚠️ MongoDB Atlas note (falling back to JSON storage):', err.message);
+      });
+  } catch (e) {
+    console.warn('MongoDB package not loaded, using local storage.');
+  }
+}
+
+// Ensure history file exists
+if (!fs.existsSync(HISTORY_FILE)) {
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify([], null, 2));
+}
+
+// Ensure users file exists with default demo candidates
+if (!fs.existsSync(USERS_FILE)) {
+  const initialUsers = [
+    {
+      id: 'user-cgl-1',
+      email: 'ashish.cgl@gmail.com',
+      password: 'password123',
+      name: 'Ashish Kumar',
+      rollNo: '2401058392',
+      category: 'UR',
+      examType: 'SSC_CGL',
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: 'user-ntpc-2',
+      email: 'rahul.ntpc@gmail.com',
+      password: 'password123',
+      name: 'Rahul Verma',
+      rollNo: '2409817263',
+      category: 'OBC',
+      examType: 'RRB_NTPC_GRAD',
+      createdAt: new Date().toISOString()
+    }
+  ];
+  fs.writeFileSync(USERS_FILE, JSON.stringify(initialUsers, null, 2));
+}
+
+// Helpers
+function readPassages() {
+  try {
+    const data = fs.readFileSync(PASSAGES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return [];
+  }
+}
+
+function writePassages(data) {
+  fs.writeFileSync(PASSAGES_FILE, JSON.stringify(data, null, 2));
+}
+
+function readHistory() {
+  try {
+    const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return [];
+  }
+}
+
+function writeHistory(data) {
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify(data, null, 2));
+}
+
+function readUsers() {
+  try {
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    return [];
+  }
+}
+
+function writeUsers(data) {
+  fs.writeFileSync(USERS_FILE, JSON.stringify(data, null, 2));
+}
+
+// 1. Get all passages
+app.get('/api/passages', (req, res) => {
+  const passages = readPassages();
+  const { category, language } = req.query;
+  let filtered = passages;
+
+  if (category && category !== 'ALL') {
+    filtered = filtered.filter(p => p.category === category);
+  }
+  if (language && language !== 'ALL') {
+    filtered = filtered.filter(p => p.language.toLowerCase() === language.toLowerCase());
+  }
+
+  res.json({ success: true, passages: filtered });
+});
+
+// 2. Get single passage by id
+app.get('/api/passages/:id', (req, res) => {
+  const passages = readPassages();
+  const passage = passages.find(p => p.id === req.params.id);
+  if (!passage) {
+    return res.status(404).json({ success: false, message: 'Passage not found' });
+  }
+  res.json({ success: true, passage });
+});
+
+// 3. Add custom passage
+app.post('/api/passages', (req, res) => {
+  const { title, text, category, language, durationMinutes } = req.body;
+  if (!text || !title) {
+    return res.status(400).json({ success: false, message: 'Title and text are required.' });
+  }
+
+  const passages = readPassages();
+  const newPassage = {
+    id: 'custom-' + Date.now(),
+    title: title.trim(),
+    text: text.trim(),
+    category: category || 'Custom Practice',
+    language: language || 'English',
+    difficulty: 'Moderate',
+    targetKeystrokes: text.trim().length,
+    durationMinutes: Number(durationMinutes) || 10
+  };
+
+  passages.unshift(newPassage);
+  writePassages(passages);
+
+  res.status(201).json({ success: true, passage: newPassage });
+});
+
+// 3.5 Authentication Endpoints (Gmail & Password)
+app.post('/api/auth/register', (req, res) => {
+  try {
+    const { email, password, name, rollNo, category, examType } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ success: false, message: 'Gmail/Email, Password, and Full Name are required.' });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const users = readUsers();
+    const existing = users.find(u => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'An account with this Gmail/Email already exists. Please Sign In.' });
+    }
+
+    const newUser = {
+      id: 'user-' + Date.now(),
+      email: cleanEmail,
+      password: password,
+      name: name.trim(),
+      rollNo: rollNo?.trim() || 'SSC-' + Math.floor(1000000000 + Math.random() * 9000000000),
+      category: category || 'UR',
+      examType: examType || 'SSC_CGL',
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(newUser);
+    writeUsers(users);
+
+    const { password: _, ...userSafe } = newUser;
+    res.status(201).json({ success: true, user: userSafe, message: 'Account registered successfully!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Registration failed', error: err.message });
+  }
+});
+
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password are required.' });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const users = readUsers();
+    const user = users.find(u => u.email.toLowerCase() === cleanEmail);
+
+    if (!user || user.password !== password) {
+      return res.status(401).json({ success: false, message: 'Invalid Gmail/Email or Password. Please check your credentials.' });
+    }
+
+    const { password: _, ...userSafe } = user;
+    res.json({ success: true, user: userSafe, message: 'Signed in successfully!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Login failed', error: err.message });
+  }
+});
+
+app.post('/api/auth/demo', (req, res) => {
+  try {
+    const { accountType } = req.body; // 'cgl' or 'ntpc'
+    const users = readUsers();
+    let targetUser = users.find(u => accountType === 'ntpc' ? u.email.includes('ntpc') : u.email.includes('cgl'));
+    if (!targetUser && users.length > 0) targetUser = users[0];
+
+    if (!targetUser) {
+      return res.status(404).json({ success: false, message: 'Demo account unavailable.' });
+    }
+
+    const { password: _, ...userSafe } = targetUser;
+    res.json({ success: true, user: userSafe, message: 'Demo login successful!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Demo login failed' });
+  }
+});
+
+// 4. Official SSC / Railway Evaluation Endpoint
+app.post('/api/evaluate', (req, res) => {
+  try {
+    const {
+      originalText,
+      typedText,
+      timeTakenSeconds,
+      testDurationMinutes,
+      backspaceCount,
+      examType,
+      category,
+      candidateInfo,
+      passageTitle
+    } = req.body;
+
+    if (originalText === undefined || typedText === undefined) {
+      return res.status(400).json({ success: false, message: 'originalText and typedText are required.' });
+    }
+
+    const evaluation = evaluateTyping({
+      originalText,
+      typedText,
+      timeTakenSeconds: Number(timeTakenSeconds) || 60,
+      testDurationMinutes: Number(testDurationMinutes) || 10,
+      backspaceCount: Number(backspaceCount) || 0,
+      examType: examType || candidateInfo?.examType || 'SSC_CHSL',
+      category: category || candidateInfo?.category || 'UR'
+    });
+
+    const resultRecord = {
+      id: 'attempt-' + Date.now(),
+      timestamp: new Date().toISOString(),
+      passageTitle: passageTitle || 'Typing Practice',
+      candidateName: candidateInfo?.name || 'Candidate',
+      rollNo: candidateInfo?.rollNo || 'SSC-2026-X',
+      userEmail: candidateInfo?.email || 'ashish.cgl@gmail.com',
+      userId: candidateInfo?.id || candidateInfo?.userId || 'guest',
+      category: category || candidateInfo?.category || 'UR',
+      examType: examType || candidateInfo?.examType || 'SSC_CGL',
+      ...evaluation
+    };
+
+    // Save to history
+    const history = readHistory();
+    history.unshift(resultRecord);
+    // Keep last 200
+    writeHistory(history.slice(0, 200));
+
+    res.json({ success: true, result: resultRecord });
+  } catch (err) {
+    console.error('Evaluation error:', err);
+    res.status(500).json({ success: false, message: 'Evaluation failed', error: err.message });
+  }
+});
+
+// 5. Get History (Filtered by user email or roll number if logged in)
+app.get('/api/history', (req, res) => {
+  const history = readHistory();
+  const { email, rollNo } = req.query;
+  let filtered = history;
+
+  if (email) {
+    filtered = filtered.filter(h => h.userEmail && h.userEmail.toLowerCase() === email.trim().toLowerCase());
+  } else if (rollNo) {
+    filtered = filtered.filter(h => h.rollNo === rollNo.trim());
+  }
+
+  res.json({ success: true, history: filtered });
+});
+
+// 6. Reset History (Per user or global)
+app.delete('/api/history', (req, res) => {
+  const { email } = req.query;
+  if (email) {
+    let history = readHistory();
+    history = history.filter(h => !h.userEmail || h.userEmail.toLowerCase() !== email.trim().toLowerCase());
+    writeHistory(history);
+    return res.json({ success: true, message: `History cleared for ${email}` });
+  }
+  writeHistory([]);
+  res.json({ success: true, message: 'History cleared' });
+});
+
+// 7. Exam Guidelines / Rules info
+app.get('/api/exam-rules', (req, res) => {
+  res.json({
+    success: true,
+    rules: {
+      SSC_CGL: {
+        name: "SSC CGL (DEST - Data Entry Skill Test)",
+        qualifyingWPM: 27,
+        targetKeystrokes: 2000,
+        standardDurationMinutes: 15,
+        allowedMistakes: {
+          UR: "5%",
+          OBC_EWS: "7%",
+          SC_ST_ESM: "10%"
+        },
+        backspace: "Allowed without deduction",
+        calculation: "Formula: Net WPM = Gross WPM - (Total Mistakes / Time)"
+      },
+      SSC_CHSL: {
+        name: "SSC CHSL (LDC / JSA / DEO)",
+        qualifyingWPM: 35, // English
+        targetKeystrokes: 1750, // for 10 min
+        standardDurationMinutes: 10,
+        allowedMistakes: {
+          UR: "7%",
+          OBC_EWS: "10%",
+          SC_ST: "10%"
+        },
+        backspace: "Allowed without restriction",
+        calculation: "Formula: Net WPM = Gross WPM - (Total Mistakes / Time)"
+      },
+      RRB_NTPC: {
+        name: "Railway RRB NTPC Typing Skill Test",
+        qualifyingWPM: 30, // English (25 Hindi)
+        targetKeystrokes: 1500,
+        standardDurationMinutes: 10,
+        allowedMistakes: {
+          AllCategories: "5% mistakes ignored. Excess mistakes deducted @ 5 words per mistake."
+        },
+        backspace: "Allowed without penalty",
+        calculation: "Formula: Net Words = Gross Typed Words - (Excess Mistakes * 5)"
+      }
+    }
+  });
+});
+
+// 8. Serve Production Client Build (1-Click Free Deployment)
+const clientDistPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  console.log(`📦 Serving production client build from ${clientDistPath}`);
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
+app.listen(PORT, () => {
+  console.log(`SSC / Railway Typing Platform Server running on port ${PORT}`);
+});

@@ -1,0 +1,1219 @@
+[
+  {
+    "id": "attempt-1792001554538",
+    "timestamp": "2026-10-14T18:12:34.538Z",
+    "passageTitle": "Test Passage",
+    "candidateName": "Rohan Sharma",
+    "rollNo": "2401099881",
+    "userEmail": "testuser@gmail.com",
+    "userId": "guest",
+    "category": "EWS",
+    "examType": "SSC_CGL",
+    "candidateCategory": "EWS",
+    "categoryMaxAllowedError": 7,
+    "timeTakenSeconds": 30,
+    "timeTakenMinutes": 0.5,
+    "totalOriginalWords": 9,
+    "totalTypedWords": 9,
+    "totalKeystrokes": 43,
+    "backspaceCount": 0,
+    "correctWordsCount": 9,
+    "fullMistakes": 0,
+    "halfMistakes": 0,
+    "totalMistakes": 0,
+    "grossWPM": 17.2,
+    "netWPM": 17.2,
+    "grossKDPH": 5160,
+    "requiredKDPH": 8000,
+    "ignoredMistakes": 0,
+    "excessMistakes": 0,
+    "penaltyWordsDeducted": 0,
+    "errorPercentage": 0,
+    "accuracy": 100,
+    "requiredWPM": 27,
+    "maxAllowedError": 7,
+    "isSpeedQualified": false,
+    "isAccuracyQualified": true,
+    "isQualified": false,
+    "categoryComparison": [
+      {
+        "category": "UR",
+        "maxAllowedError": 5,
+        "minAccuracy": 95,
+        "description": "Unreserved (UR): Max 5% Errors (Min 95% Accuracy, 8000 KDPH)",
+        "isQualified": false,
+        "isCandidateCategory": false
+      },
+      {
+        "category": "OBC",
+        "maxAllowedError": 7,
+        "minAccuracy": 93,
+        "description": "OBC: Max 7% Errors (Min 93% Accuracy, 8000 KDPH)",
+        "isQualified": false,
+        "isCandidateCategory": false
+      },
+      {
+        "category": "EWS",
+        "maxAllowedError": 7,
+        "minAccuracy": 93,
+        "description": "EWS: Max 7% Errors (Min 93% Accuracy, 8000 KDPH)",
+        "isQualified": false,
+        "isCandidateCategory": true
+      },
+      {
+        "category": "SC",
+        "maxAllowedError": 10,
+        "minAccuracy": 90,
+        "description": "SC: Max 10% Errors (Min 90% Accuracy, 8000 KDPH)",
+        "isQualified": false,
+        "isCandidateCategory": false
+      },
+      {
+        "category": "ST",
+        "maxAllowedError": 10,
+        "minAccuracy": 90,
+        "description": "ST: Max 10% Errors (Min 90% Accuracy, 8000 KDPH)",
+        "isQualified": false,
+        "isCandidateCategory": false
+      },
+      {
+        "category": "PwD",
+        "maxAllowedError": 10,
+        "minAccuracy": 90,
+        "description": "PwD / ESM: Max 10% Errors (Min 90% Accuracy, 8000 KDPH)",
+        "isQualified": false,
+        "isCandidateCategory": false
+      }
+    ],
+    "weakWords": [],
+    "detailedResults": [
+      {
+        "status": "correct",
+        "expected": "The",
+        "actual": "The",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "quick",
+        "actual": "quick",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "brown",
+        "actual": "brown",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "fox",
+        "actual": "fox",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "jumps",
+        "actual": "jumps",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "over",
+        "actual": "over",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "the",
+        "actual": "the",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "lazy",
+        "actual": "lazy",
+        "penalty": 0
+      },
+      {
+        "status": "correct",
+        "expected": "dog",
+        "actual": "dog",
+        "penalty": 0
+      }
+    ]
+  },
+  {
+    "id": "attempt-1791999860871",
+    "timestamp": "2026-10-14T17:44:20.871Z",
+    "passageTitle": "SSC CGL DEST Mock 01: Semiconductor Ecosystem & Indigenous Manufacturing",
+    "candidateName": "Ashish Kumar",
+    "rollNo": "2401058392",
+    "examType": "SSC_CGL",
+    "category": "UR",
+    "timeTakenSeconds": 9,
+    "timeTakenMinutes": 0.15,
+    "totalOriginalWords": 149,
+    "totalTypedWords": 3,
+    "totalKeystrokes": 27,
+    "backspaceCount": 0,
+    "correctWordsCount": 1,
+    "fullMistakes": 147,
+    "halfMistakes": 1,
+    "totalMistakes": 147.5,
+    "grossWPM": 36,
+    "netWPM": 0,
+    "grossKDPH": 10800,
+    "errorPercentage": 4916.67,
+    "accuracy": 0,
+    "requiredWPM": 27,
+    "maxAllowedError": 5,
+    "isSpeedQualified": false,
+    "isAccuracyQualified": false,
+    "isQualified": false,
+    "detailedResults": [
+      {
+        "status": "correct",
+        "expected": "The",
+        "actual": "The",
+        "penalty": 0
+      },
+      {
+        "status": "half_mistake",
+        "reason": "Minor Spelling Typo",
+        "expected": "semiconductor",
+        "actual": "semiconductir",
+        "penalty": 0.5
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "manufacturing",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "sector",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "forms",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "the",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "indispensable",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "foundation",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "of",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "contemporary",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "technological",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "sovereignty",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "industrial",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "modernization.",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "Advanced",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "microchips",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "power",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "virtually",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "every",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "critical",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "domain,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "spanning",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "consumer",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "smartphones,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "precision",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "medical",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "apparatus,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "high-speed",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "rail",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "transportation,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "next-generation",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "defense",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "avionics.",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "Recognizing",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "the",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "strategic",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "vulnerabilities",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "exposed",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "by",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "recent",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "global",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "disruptions",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "in",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "chip",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "availability,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Word Substitution",
+        "expected": "comprehensive",
+        "actual": "mandufacr",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "semiconductor",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "promotion",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "initiatives",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "have",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "been",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "inaugurated",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "to",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "cultivate",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "domestic",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "fabrication",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "units,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "assembly",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "packaging",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "ecosystems,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "design",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "laboratories.",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "Substantial",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "fiscal",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "incentives",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "coupled",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "with",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "streamlined",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "environmental",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "clearances",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "have",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "stimulated",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "active",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "collaboration",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "between",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "domestic",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "engineering",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "entities",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "multinational",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "technology",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "leaders.",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "Furthermore,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "continuous",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "capital",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "allocation",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "toward",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "specialized",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "cleanroom",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "infrastructure,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "reliable",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "high-voltage",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "electrical",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "distribution",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "networks,",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "ultra-pure",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "water",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "recycling",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "facilities",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "is",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "vital",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "to",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "sustain",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "uninterrupted",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "fabrication",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "processes.",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "Cultivating",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "specialized",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "workforce",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "talent",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "in",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "very",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "large",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "scale",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "integration",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "design",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "automated",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "micro-lithography",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "will",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "ensure",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "resilient",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "long-term",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "self-reliance.",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "This",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "ambitious",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "roadmap",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "strengthens",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "economic",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "robustness",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "and",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "firmly",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "integrates",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "our",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "domestic",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "industrial",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "landscape",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "into",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "the",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "forefront",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "of",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "international",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "electronics",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "supply",
+        "actual": "—",
+        "penalty": 1
+      },
+      {
+        "status": "full_mistake",
+        "reason": "Omission of word",
+        "expected": "networks.",
+        "actual": "—",
+        "penalty": 1
+      }
+    ]
+  }
+]

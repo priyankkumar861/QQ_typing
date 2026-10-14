@@ -1,0 +1,426 @@
+const fs = require('fs');
+const path = require('path');
+
+// Helper to guarantee minimum character length
+function ensureLength(baseText, additionalParagraph, minLength) {
+  let result = baseText.trim();
+  if (result.length < minLength) {
+    result += " " + additionalParagraph.trim();
+  }
+  return result;
+}
+
+const cglMocks = [
+  {
+    id: "cgl-mock-01",
+    title: "SSC CGL DEST Mock 01: Semiconductor Ecosystem & Indigenous Manufacturing",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    p1: "The semiconductor manufacturing sector forms the indispensable foundation of contemporary technological sovereignty and industrial modernization. Advanced microchips power virtually every critical domain, spanning consumer smartphones, precision medical apparatus, high-speed rail transportation, and next-generation defense avionics. Recognizing the strategic vulnerabilities exposed by recent global disruptions in chip availability, comprehensive semiconductor promotion initiatives have been inaugurated to cultivate domestic fabrication units, assembly packaging ecosystems, and design laboratories. Substantial fiscal incentives coupled with streamlined environmental clearances have stimulated active collaboration between domestic engineering entities and multinational technology leaders. Furthermore, continuous capital allocation toward specialized cleanroom infrastructure, reliable high-voltage electrical distribution networks, and ultra-pure water recycling facilities is vital to sustain uninterrupted fabrication processes. Cultivating specialized workforce talent in very large scale integration design and automated micro-lithography will ensure resilient long-term self-reliance.",
+    p2: "In addition to commercial fabrication facilities, national research universities are establishing specialized incubation centers to advance semiconductor material science, compound gallium nitride semiconductors, and quantum micro-architectures. Public procurement guidelines now encourage the integration of domestically designed micro-controllers across critical communication networks, smart energy meters, and automated railway signaling mechanisms. Collaborative technology transfer agreements with international fabrication foundries will facilitate hands-on operational training for local technical graduates. By harmonizing fiscal support mechanisms with strict adherence to environmental emission standards, the comprehensive semiconductor master plan establishes our domestic industrial landscape at the competitive forefront of the global electronics value network. Long-term strategic stability depends fundamentally on sustained investments in cutting-edge semiconductor research, robust intellectual property protections, and uninterrupted supply chains for rare chemical reagents and silicon ingots."
+  },
+  {
+    id: "cgl-mock-02",
+    title: "SSC CGL DEST Mock 02: Green Hydrogen Mission & Sustainable Decarbonization",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    p1: "Decarbonizing heavy industrial processes and thermal power generation represents the defining ecological priority of the modern global economy. Rapid transition toward zero-emission energy carriers is imperative to fulfill international climate agreements and mitigate atmospheric temperature anomalies. In this framework, green hydrogen produced through electrolysis powered exclusively by renewable wind and solar energy provides a viable pathway to eliminate carbon footprints across hard-to-abate industries such as steel refining, nitrogenous fertilizers, and commercial marine shipping. Targeted production subsidies and strategic infrastructure investments in port terminal facilities are transforming regional coastal zones into clean energy exporting gateways. Simultaneously, nationwide research programs are pioneering cost-effective indigenous membrane electrolyzers and high-pressure carbon composite transport cylinders. By establishing unified safety standards and fostering robust private sector research partnerships, the transition accelerates energy autonomy, minimizes fossil fuel import bills, and promotes environmentally responsible economic progress for future generations.",
+    p2: "Moreover, blending green hydrogen into municipal gas distribution pipelines reduces greenhouse emissions from commercial heating and domestic cooking. Specialized pilot projects are deploying hydrogen fuel cell buses across high-altitude corridors, demonstrating remarkable thermal efficiency in extreme sub-zero weather conditions. Establishing dedicated hydrogen research corridors and incentivizing private capital investments in hydrogen refuelling stations will create thousands of skilled technical occupations. Strategic coordination between the ministry of new and renewable energy, domestic industrial manufacturers, and international research consortiums guarantees that sustainable hydrogen production will serve as the cornerstone of our long-term environmental commitment. Developing international certification protocols for green hydrogen guarantees that our domestic exports comply with rigorous global environmental standards and maintain market competitiveness across overseas industrial markets."
+  },
+  {
+    id: "cgl-mock-03",
+    title: "SSC CGL DEST Mock 03: Constitutional Governance & Autonomous Institutional Checks",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    p1: "The stability and vitality of democratic governance rest fundamentally upon the steadfast preservation of institutional checks and balances enshrined within the Constitution. An autonomous election commission functioning without external executive interference serves as the bedrock of participatory legitimacy, conducting free and impartial plebiscites across geographically diverse constituencies. Regular deployment of technologically secured electronic voting machines coupled with paper audit trail verifications reinforces popular confidence in democratic verdicts. Concurrently, an independent judicial hierarchy safeguards individual fundamental liberties against arbitrary administrative encroaching while interpreting statutory enactments in harmony with constitutional morality. Strengthening parliamentary deliberative mechanisms, ensuring transparent campaign finance reporting, and encouraging active civil society scrutiny remain indispensable pillars to insulate public authority against authoritarian tendencies. Upholding these republican precepts guarantees that governance continuously reflects the sovereign will of citizens.",
+    p2: "In addition, administrative decentralized governance through panchayati raj institutions empowers grassroots rural communities to design and implement local developmental priorities directly. The separation of powers between the executive, legislature, and judiciary prevents the consolidation of unchecked authority within any singular administrative entity. Furthermore, autonomous constitutional watchdogs such as the comptroller and auditor general provide rigorous financial audits, ensuring that public revenues collected through taxation are expended strictly in compliance with statutory legislative authorizations. Cultivating civic awareness through comprehensive electoral education programs deepens democratic resilience, fostering an informed electorate that vigilantly preserves democratic conventions. A vibrant constitutional democracy flourishes when statutory institutions exercise their supervisory responsibilities with unyielding integrity, procedural objectivity, and fearless independence."
+  },
+  {
+    id: "cgl-mock-04",
+    title: "SSC CGL DEST Mock 04: Artificial Intelligence & Citizen-Centric Administrative Efficiency",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    p1: "Deploying cutting-edge artificial intelligence and predictive data analytics across public administration is revolutionizing the delivery of citizen-centric governmental services. Automated document verification systems in revenue offices significantly curtail bureaucratic delays, enabling swift processing of welfare pension entitlements and commercial business licenses. Machine learning models trained on public health registries facilitate preemptive identification of epidemiological outbreaks, allowing healthcare administrators to deploy medical supplies with precision. In municipal governance, intelligent traffic management cameras dynamic signal timing alleviates urban transit bottlenecks and curtails greenhouse exhaust emissions. Nevertheless, the integration of algorithmic decision-making necessitates rigorous algorithmic auditing frameworks to prevent systemic demographic biases and uphold procedural transparency. Enacting robust data protection statutes and establishing independent oversight tribunals will harmonize administrative efficiency with inviolable privacy rights of all citizens.",
+    p2: "Modernizing disaster response frameworks through real-time satellite imagery analysis enables municipal disaster squads to evacuate vulnerable coastal settlements prior to cyclone landfalls. Automated grievance redressal chatbots operating in regional vernacular dialects permit rural beneficiaries to track welfare fund transfers directly via basic mobile devices. Administrative transparency is substantially heightened when digital service portals eliminate human discretion in issuing statutory certificates and land records. Regular capacity building programs for public civil servants ensure that technological modernization remains grounded in ethical empathy and inclusive responsiveness. Safeguarding data sovereignty and defending public computing networks against sophisticated international cyber espionage ensures that digital administrative transformations protect public security and national interests."
+  },
+  {
+    id: "cgl-mock-05",
+    title: "SSC CGL DEST Mock 05: Modern Agricultural Logistics & Cold Storage Infrastructure",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    p1: "Modernizing agricultural marketing infrastructure and establishing uninterrupted cold storage logistics networks are indispensable to augmenting farmer incomes and curbing post-harvest crop perishability. A significant proportion of seasonal horticultural output, including fruits and vegetables, deteriorates in transit due to inadequate climate-controlled warehousing facilities at rural farm gates. Facilitating low-interest capital loans for farmer producer organizations to install solar-powered cold rooms enables cultivators to delay distress sales during market gluts and negotiate remunerative commodity prices. Concurrently, expanding digital agricultural electronic trading platforms connects local agrarian producers directly with nationwide bulk food processors and supermarket distribution networks. Eliminating intermediary brokerage commissions and improving refrigerated containerized freight transport directly enhances rural purchasing capacity while stabilizing essential food commodity inflation in major metropolitan consuming centers.",
+    p2: "In tandem with warehousing expansion, micro-irrigation systems utilizing automated drip and sprinkler technologies conserve scarce groundwater resources while maximizing crop yields across arid geographical belts. Establishing quality testing laboratories at rural procurement centers ensures transparent grading of produce, allowing cultivators to secure premium pricing for organic and pesticide-free grains. Integrating farm telemetry with regional meteorological forecasting networks furnishes farmers with timely agro-advisories on soil moisture, fertilizer application, and pest infestation control. Strategic coordination across rural cooperatives and commercial logistics operators creates a resilient agro-industrial value chain. Expanding rural agro-processing industrial parks stimulates local employment opportunities for rural youth while drastically curtailing agricultural supply chain inefficiencies nationwide."
+  },
+  {
+    id: "cgl-mock-06",
+    title: "SSC CGL DEST Mock 06: Space Exploration & Indigenous Satellite Technology",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    p1: "The remarkable advancements achieved by our indigenous space research organization have positioned the country among elite spacefaring nations worldwide. Cost-effective satellite launching vehicles regularly place domestic remote sensing payloads and foreign commercial communication satellites into designated polar and geosynchronous orbits. Advanced imaging satellites provide vital geophysical intelligence for meteorological cyclone forecasting, drought risk mitigation, mineral exploration, and coastal shoreline management. The upcoming human spaceflight mission underscores technological maturity in automated orbital guidance, environmental life-support systems, and thermal atmospheric reentry shields. Furthermore, opening the commercial space sector to innovative private startups has catalyzed the fabrication of compact satellite constellations and reusable propulsion thrusters. Peaceful exploitation of extraterrestrial sciences inspires young scientific intellects while delivering tangible socio-economic dividends across agricultural telemetry, disaster rescue, and universal digital connectivity.",
+    p2: "Satellite-based navigation constellations provide dependable location-based telemetry for civilian aviation, maritime navigation, and territorial defense surveillance. Ongoing lunar exploration initiatives and deep-space planetary orbiters continue to expand fundamental scientific understanding regarding regolith composition and solar wind interactions. Establishing dedicated aerospace testing facilities and offering public grants for satellite sensor development stimulates domestic precision manufacturing industries. This self-reliant space program demonstrates that advanced scientific exploration can harmoniously co-exist with inclusive grassroots socioeconomic development. Expanding international space research partnerships establishes our scientific community at the forefront of global deep-space discoveries and peaceful scientific collaboration."
+  }
+];
+
+const chslMocks = [
+  {
+    id: "chsl-mock-01",
+    title: "SSC CHSL DEST Mock 01: Digital Financial Literacy & Banking Inclusivity",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    p1: "Expanding digital financial literacy across rural and semi-urban communities is paramount to achieving holistic socioeconomic empowerment. Universal access to basic banking accounts, combined with biometric verification interfaces, has dismantled historical hurdles that excluded impoverished citizens from formalized monetary ecosystems. Direct benefit transfers route welfare scholarships, maternity entitlements, and agricultural crop subsidies straight into verified savings accounts, completely eliminating predatory administrative leakage. Mobile unified payment interfaces allow micro-merchants and street vendors to execute frictionless cashless commercial transactions with complete fiscal security.",
+    p2: "However, the rapid proliferation of electronic banking demands comprehensive public cyber education campaigns to alert inexperienced users against fraudulent phishing solicitations and unauthorized personal identification disclosures. Establishing neighborhood common service centers staffed by trained digital banking correspondents guarantees that vulnerable senior citizens receive personalized guidance in navigating electronic payment applications safely. Promoting transparent digital credit scoring facilitates micro-enterprise capital loans without collateral encumbrances, accelerating grassroots entrepreneurial vitality and reinforcing economic resilience across agrarian communities. Expanding regional financial awareness camps safeguards rural savings while building universal confidence in modern digital transactions."
+  },
+  {
+    id: "chsl-mock-02",
+    title: "SSC CHSL DEST Mock 02: Renewable Solar Energy & Grid Decentralization",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    p1: "Accelerating the deployment of distributed rooftop solar photovoltaic installations plays a transformative role in decentralizing electrical power generation. Conventional dependence on centralized fossil fuel thermal power plants imposes heavy carbon emissions while incurring substantial transmission line losses across vast geographic distances. Promoting decentralized solar energy enables commercial institutions, agrarian cold storages, and residential cooperatives to produce clean electrical power on site. Smart net-metering regulations allow individual prosumers to feed surplus daytime solar power back into the utility grid, securing fiscal utility credits and lowering household operational expenditures.",
+    p2: "Concurrently, investments in indigenous silicon ingot fabrication and battery energy storage technologies enhance grid resilience during night time peak load fluctuations. By integrating distributed rooftop arrays with automated smart grid distribution infrastructure, our national energy transition delivers dependable zero-carbon electricity to remote rural hamlets while stimulating local employment across technical maintenance and installation sectors. Fostering domestic solar equipment manufacturing diminishes reliance on imported solar modules, building long-term technological self-reliance and accelerating ecological modernization across industrial sectors."
+  },
+  {
+    id: "chsl-mock-03",
+    title: "SSC CHSL DEST Mock 03: Forest Conservation & Biodiversity Preservation",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    p1: "Safeguarding ecologically fragile rainforests and wildlife corridors is critical to maintaining hydrological equilibria and preserving precious botanical biodiversity. Unchecked industrial urban sprawl, coupled with unlawful timber logging, fragments natural habitats, precipitating acute human-wildlife encounters and threatening endangered endemic species with extinction. Implementing satellite-based forest fire tracking systems enables territorial rangers to deploy containment apparatus prior to catastrophic blaze expansions.",
+    p2: "Concurrently, participatory joint forest management agreements empower indigenous forest-dwelling communities to gather minor forest produce sustainably while actively defending reserve perimeter zones against commercial encroachers. Restoring degraded river catchment zones through native afforestation projects stabilizes topsoil integrity, curtails reservoir sedimentation, and replenishes depleting subterranean aquifers. Formulating rigorous statutory conservation penalties deters illegal wildlife trafficking, ensuring that our irreplaceable natural heritage remains preserved for subsequent generations. Community participation remains the most vital pillar in defending ecological reserves."
+  },
+  {
+    id: "chsl-mock-04",
+    title: "SSC CHSL DEST Mock 04: Public Transportation & Urban Air Quality Improvement",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    p1: "Modernizing urban mass transit ecosystems represents the single most potent administrative strategy to alleviate vehicular congestion and purify deteriorating metropolitan air quality. Reliance on private fossil fuel motor vehicles congests major arterial thoroughfares, elevating particulate matter concentrations and causing chronic respiratory afflictions among city dwellers. Expanding metro rail networks, alongside deploying dedicated electric bus corridors equipped with smart electronic ticketing, provides commuters with a swift, economical, and clean travel alternative.",
+    p2: "Integrated multi-modal transit interchange hubs enable seamless pedestrian connectivity between suburban passenger rail services, metro terminals, and zero-emission feeder vans. Furthermore, developing protected cycling pathways and spacious pedestrian footpaths encourages non-motorized micro-mobility for short daily trips. Prioritizing capital investments in public electric transit infrastructure diminishes national crude oil import expenditures while rejuvenating metropolitan liveability and public health. Sustained municipal investments in green public transport infrastructure create cleaner, healthier urban living environments."
+  },
+  {
+    id: "chsl-mock-05",
+    title: "SSC CHSL DEST Mock 05: Primary Healthcare Networks & Universal Immunization",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    p1: "Strengthening primary healthcare sub-centers and ensuring universal immunization coverage are foundational imperatives for elevating national human development indicators. Accessible community health posts, equipped with certified diagnostic machinery and staffed by dedicated auxiliary nurse midwives, provide essential antenatal checkups, child immunization doses, and chronic disease screenings right at the village doorstep. Maintaining an unbroken cold chain distribution network ensures that delicate pediatric vaccines retain maximum immunogenic efficacy across remote geographical terrains.",
+    p2: "Digital health record repositories permit attending physicians to review patient clinical histories seamlessly, preventing redundant pharmaceutical prescriptions and expediting emergency medical referrals. Promoting widespread health awareness regarding sanitary drinking water, personal hygiene, and balanced nutritional diets substantially curtails the incidence of preventable waterborne infections. Investing in robust primary healthcare cushions underprivileged households against catastrophic out-of-pocket medical expenditures while securing healthy childhood development across all social strata."
+  },
+  {
+    id: "chsl-mock-06",
+    title: "SSC CHSL DEST Mock 06: Water Conservation & Watershed Rejuvenation",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    p1: "Conserving scarce freshwater resources and implementing scientific watershed management systems are vital to insulate rural economies against recurring hydrological droughts. Intensive agricultural groundwater extraction through uncontrolled deep borewells has drastically lowered water tables across agrarian belts, threatening agricultural sustainability. Constructing check dams, contour trenches, and percolation tanks captures monsoon runoff, allowing surplus surface rainwater to seep into subterranean aquifers instead of washing away into salty oceans.",
+    p2: "Community-led water budgeting programs encourage farmers to transition from water-intensive crops toward drought-resistant coarse cereals like millets and oilseeds. Concurrently, mandatory rainwater harvesting installations in urban building complexes replenish metropolitan ground reserves and prevent urban flash floods. Fostering a nationwide ethic of prudent water stewardship guarantees long-term water security for domestic, agrarian, and industrial needs alike. Coordinated watershed conservation ensures equitable water distribution across drought-prone rural districts."
+  }
+];
+
+const ntpcGradMocks = [
+  {
+    id: "ntpc-grad-01",
+    title: "RRB NTPC Graduate Mock 01: Strategic Railway Operations & Intermodal Logistics",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Strategic railway operational planning and automated traffic supervision are vital to maximizing revenue freight throughput across congested national trunk lines. Graduate supervisory executives in operating and commercial cadres coordinate train line-ups, monitor terminal dwell periods, and synchronize rake placements with major industrial seaports. Deploying centralized traffic control towers equipped with electronic interlocking minimizes headway between freight consists while ensuring fail-safe precedence for scheduled express passenger services.",
+    p2: "Advanced enterprise resource applications streamline rolling stock utilization, tracking wagon positions in real time and curbing empty wagon haulage kilometers. Collaborative agreements with domestic container operators facilitate seamless inland container depot movements, lowering overall logistics expenditure for core commodities like cement, finished steel, and coal. Prudent commercial tariff structuring, coupled with seasonal freight concession incentives, continuously bolsters operational operating ratios across zonal railway administrations. Operational excellence and freight speed enhancements transform Indian Railways into a competitive global logistics provider."
+  },
+  {
+    id: "ntpc-grad-02",
+    title: "RRB NTPC Graduate Mock 02: Financial Accounting Standards & Railway Capital Budgeting",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Comprehensive financial accounting compliance and capital budget execution form the financial backbone of modern railway management. Accounts executives and senior clerical personnel maintain rigorous oversight over traffic receipts, contractor bill passing, rolling stock leasing commitments, and internal pension reserve funds. Transitioning toward accrual-based commercial accounting frameworks provides transparent cost attribution across passenger services versus freight transportation sectors.",
+    p2: "Scrutinizing capital expenditure requisitions for line doubling, signaling modernization, and workshop automation ensures optimum internal rate of return on public budgetary outlays. Automated payment interfaces integrated with the national treasury portal enforce statutory tax deductions at source and accelerate vendor payment settlements without administrative bottlenecks. Furthermore, internal audit teams conduct structured surprise checks at major commercial parcel depots, eliminating revenue leakages and safeguarding organizational solvency across all divisional accounting entities."
+  },
+  {
+    id: "ntpc-grad-03",
+    title: "RRB NTPC Graduate Mock 03: High-Density Corridor Modernization & Automatic Block Signaling",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Upgrading high-density railway corridors through automated block signaling and track doubling constitutes an indispensable administrative mandate to accommodate surging passenger traffic. Dividing lengthy block sections into shorter automated signaling intervals allows multiple trains to travel safely in succession along the same directional track. This substantial throughput expansion defers expensive land acquisition while doubling line capacity across saturated metropolitan commuter trunk routes.",
+    p2: "Senior operations supervisors monitor train describer consoles, promptly resolving local point failures and coordinating emergency engineering block intervals during off-peak hours. Simultaneously, replacing obsolete mechanical semaphore apparatus with multi-aspect color light signals illuminated by energy-efficient light emitting diodes enhances optical visibility during adverse monsoon and winter fog weather conditions. Rigorous maintenance discipline preserves asset reliability across all divisional territories and guarantees punctual passenger transit."
+  },
+  {
+    id: "ntpc-grad-04",
+    title: "RRB NTPC Graduate Mock 04: Public-Private Partnerships in Terminal Infrastructure",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Leveraging public-private partnerships in multimodal cargo terminal development accelerates the modern transformation of railway infrastructure. Private logistics concessionaires construct specialized private freight terminals equipped with mechanized gantry cranes, heavy-duty container yards, and temperature-controlled cold warehouses. These modern joint venture terminals interface directly with the main railway network, enabling bulk industrial producers to load containerized cargo directly without secondary highway transshipment.",
+    p2: "Commercial supervisors verify siding agreements, calculate demurrage and wharfage dues transparently, and maintain close liaison with trade chambers to capture new parcel traffic. Fostering a responsive, customer-oriented commercial culture positions the railway network as the logistics partner of choice for rapidly expanding electronic commerce distribution networks and manufacturing corporations. Transparent commercial contracting ensures long-term revenue growth and operational vitality."
+  },
+  {
+    id: "ntpc-grad-05",
+    title: "RRB NTPC Graduate Mock 05: Passenger Hospitality & Digital Commercial Ticketing",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Re-engineering passenger hospitality standards and commercial reservation protocols directly enhances customer satisfaction across suburban and long-distance passenger travel segments. Cloud-hosted ticket reservation platforms process tens of thousands of concurrent booking transactions per second without server latency, incorporating dynamic multi-factor authentication to curb fraudulent commercial ticket hoarding. At major junction stations, executive station directors and senior commercial staff oversee mechanized housekeeping services, pre-cooked hygienic catering distribution, and barrier-free tactile pathways for visually impaired passengers.",
+    p2: "Transparent electronic display screens provide real-time coach guidance and platform change advisories, eliminating terminal crowd surges during holiday festive rush seasons. Continuous service quality audits and institutional grievance resolution applications uphold passenger goodwill across all zonal rail networks. Passenger-centric amenities and digital accessibility ensure a dignified and comfortable travel experience for millions of citizens."
+  },
+  {
+    id: "ntpc-grad-06",
+    title: "RRB NTPC Graduate Mock 06: Rolling Stock Asset Maintenance & Predictive Engineering",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Implementing predictive condition monitoring systems across rolling stock maintenance facilities marks a pivotal transition from reactive breakdown repairs to proactive asset reliability. Acoustic bearing detectors and wheel impact monitors installed on running tracks continuously identify sub-surface wheel defects and hot axle conditions before rolling stock reaches designated inspection yards. Skilled technical supervisors and divisional accounts personnel manage the timely procurement of critical spare assemblies, avoiding costly locomotive detention.",
+    p2: "Modern computerized maintenance management software tracks the lifecycle history of traction motors, bogie frames, and air-brake assemblies, scheduling periodic overhauls strictly as per manufacturer engineering tolerances. This proactive maintenance philosophy mitigates en-route rolling stock failures, protects railway capital assets, and preserves train punctuality. Advanced diagnostic telemetry safeguards railway assets and ensures optimal rolling stock availability."
+  }
+];
+
+const ntpcUgMocks = [
+  {
+    id: "ntpc-ug-01",
+    title: "RRB NTPC UG Mock 01: Office Procedures & Electronic File Management",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Mastering standardized office filing procedures and electronic document management is essential for clerical staff across railway administrative divisions. Junior clerks handle official correspondence, register incoming public petitions, and prepare clear chronological summaries for superior supervisory officers. Transitioning to paperless digital office portals accelerates file movements between departmental branches, allowing staff to track draft approvals and maintain tamper-proof digital audit trails.",
+    p2: "Diligent clerks ensure that statutory service registers, employee leave balances, and overtime wage allowances are calculated accurately without computational discrepancies. Maintaining indexed archival records facilitates prompt retrieval of historical precedents during judicial and administrative inquiries. A dedicated, detail-oriented clerical cadre underpins efficient public administration across all operational divisional headquarters. Punctual file clearances and accurate ledger maintenance support organizational efficiency."
+  },
+  {
+    id: "ntpc-ug-02",
+    title: "RRB NTPC UG Mock 02: Passenger Booking Clerical Duties & Cash Remittance",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Junior commercial booking clerks perform front-line responsibilities at passenger station ticket windows, issuing unreserved journey tickets and platform passes to traveling citizens. Clerks must display exceptional accuracy in verifying currency denominations, issuing correct monetary change rapidly, and balancing total shift collections with computerized transaction ledger statements. All cash collections, accompanied by official remittance challans, are deposited into station cash safes under strict supervisory protocol.",
+    p2: "During heavy festive passenger rushes, booking clerks maintain calm courtesy, explaining travel restrictions and concessional fare eligibility clearly to rural and elderly passengers. Flawless accounting reconciliation and honest cash custodianship maintain commercial integrity across railway booking counters nationwide. Dedicated booking counter staff represent the welcoming public face of Indian Railways for millions of traveling citizens daily."
+  },
+  {
+    id: "ntpc-ug-03",
+    title: "RRB NTPC UG Mock 03: Parcel Booking Procedures & Waybill Documentation",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Accurate documentation and cargo verification at parcel booking offices are indispensable for the safe transit of commercial parcels and registered luggage. Booking clerks inspect consignments to ensure compliance with packaging guidelines, weigh articles on certified weighing scales, and compute freight charges based on commodity classification tables. Every parcel is assigned a unique railway receipt containing consignor details, destination station code, and declaration of goods value.",
+    p2: "Clerks prepare physical manifest summaries for brake-van guards, ensuring that fragile medicinal supplies and perishable horticultural parcels are loaded into designated luggage compartments promptly. Careful record keeping at forwarding stations prevents goods loss, deters fraudulent claims, and ensures dependable parcel deliveries for small business traders. Reliable parcel clerical administration fosters business trust and expands domestic parcel revenue."
+  },
+  {
+    id: "ntpc-ug-04",
+    title: "RRB NTPC UG Mock 04: Railway Store Inventory Management & Material Requisition",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Store clerical personnel play an essential supporting role in managing material inventories and workshop consumable supplies across railway maintenance depots. Clerks verify incoming stock deliveries against approved purchase orders, inspect packaging seals, and record entries in digital bin-card ledgers with meticulous attention to detail. Timely preparation of issue vouchers ensures that maintenance crews receive essential lubricating oils, welding electrodes, and mechanical spare components without assembly line interruptions.",
+    p2: "Regular quarterly inventory verifications reconcile physical warehouse stocks with ledger balances, identifying surplus or obsolete materials for disposal through public auction. Efficient store accounting prevents pilferage, eliminates unnecessary capital lockup in redundant inventory, and supports uninterrupted train maintenance operations. Meticulous storekeeping maintains continuous material supply chains for high-speed train operations."
+  },
+  {
+    id: "ntpc-ug-05",
+    title: "RRB NTPC UG Mock 05: Train Movement Logging & Control Room Dispatch Records",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "In divisional operating control offices, trains clerks record train arrivals, departures, and track occupation times with unwavering vigilance. Working alongside section controllers, clerks log locomotive numbers, guard and driver identification, and gross train tonnage into computerized train operations databases. Any unscheduled en-route detention, signaling delay, or technical loco defect is recorded with precise timestamps, furnishing vital telemetry for subsequent operational post-facto performance reviews.",
+    p2: "Accurate exchange of train departure telegrams between adjacent block stations guarantees safe block section clearance and coordinated yard receptions. The disciplined diligence of trains clerks ensures operational synchronization across thousands of running kilometers. Consistent logging standards and timely communication keep busy railway junctions operating safely around the clock."
+  },
+  {
+    id: "ntpc-ug-06",
+    title: "RRB NTPC UG Mock 06: Employee Welfare Documentation & Pension Settlement",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "English",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "Personnel branch junior clerks manage critical establishment records, employee welfare files, and retirement benefit documentation for thousands of railway staff members. Clerks process service verification statements, maintain leave encashment calculations, and prepare prompt settlement papers for retiring railway personnel and family pension beneficiaries. Ensuring accurate date of birth entries, nominee designations, and qualifying service calculations prevents administrative disputes and guarantees that retiring staff receive provident fund and gratuity dues on their retirement day.",
+    p2: "Clerks also assist employee welfare officers in processing benevolent fund grants and medical reimbursement claims for lower-income railway workers. Empathetic and diligent personnel administration upholds high employee morale and administrative harmony across railway divisions. Prompt settlement of pension dues honors decades of dedicated public service by railway employees."
+  }
+];
+
+const hindiMocks = [
+  {
+    id: "hindi-mock-01",
+    title: "Hindi Typing Mock 01: राजभाषा हिंदी और राष्ट्रीय एकता",
+    category: "SSC CHSL",
+    examLevel: "Undergraduate",
+    language: "Hindi",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "राजभाषा हिंदी भारत की सांस्कृतिक चेतना और राष्ट्रीय अखंडता को सशक्त करने वाली एक अत्यंत महत्वपूर्ण संपर्क भाषा है। विविधताओं से परिपूर्ण हमारे देश में विभिन्न प्रांतीय भाषाओं और बोलियों का सम्मान करते हुए हिंदी ने जन-जन के मध्य पारस्परिक विचार-विमर्श और संवाद को सुगम बनाया है। संविधान सभा द्वारा चौदह सितंबर उन्नीस सौ उनचास को हिंदी को संघ की राजभाषा के रूप में स्वीकार किया गया था। प्रशासनिक कार्यालयों में सरल और सहज हिंदी का प्रयोग जनसाधारण को शासकीय योजनाओं और नीतियों से सीधे जोड़ता है। जब सरकारी आदेश, परिपत्र और नागरिक सेवाएं आम बोलचाल की भाषा में उपलब्ध होती हैं, तब प्रशासनिक तंत्र अधिक पारदर्शी और संवेदनशील बनता है। सूचना प्रौद्योगिकी के इस आधुनिक युग में कंप्यूटर, स्मार्टफोन और डिजिटल मीडिया पर हिंदी का बढ़ता प्रयोग राजभाषा के वैश्विक प्रसार को निरंतर नई ऊर्जा प्रदान कर रहा है। सभी नागरिकों का यह पुनीत दायित्व है कि वे अपनी कार्यशैली में हिंदी के स्वाभाविक और गरिमापूर्ण प्रयोग को निरंतर प्रोत्साहित करें।",
+    p2: "सरकारी पत्राचार, जनसंपर्क और राजकाज में हिंदी का प्रयोग न केवल प्रशासनिक दक्षता को बढ़ाता है बल्कि शासन और जनता के बीच आत्मीय संबंध भी स्थापित करता है। भारतीय साहित्य और संस्कृति के संवर्धन में हिंदी का योगदान अविस्मरणीय है। राष्ट्रीय एकता को सुदृढ़ बनाने और देश के विभिन्न भूभागों को परस्पर जोड़ने में हिंदी सदैव एक सेतु की भांति कार्य करती रहेगी।"
+  },
+  {
+    id: "hindi-mock-02",
+    title: "Hindi Typing Mock 02: भारतीय रेल और राष्ट्र निर्माण में योगदान",
+    category: "RRB NTPC Graduate",
+    examLevel: "Graduate",
+    language: "Hindi",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "भारतीय रेल देश की आर्थिक जीवन रेखा और सामाजिक एकता का सशक्त आधार स्तंभ है। कश्मीर की बर्फीली वादियों से लेकर कन्याकुमारी के दक्षिणी छोर तक फैली रेल पटरियां प्रतिदिन करोड़ों नागरिकों को उनकी मंजिल तक सुरक्षित पहुंचाती हैं। कृषि उत्पाद, कोयला, खनिज पदार्थ और तैयार औद्योगिक सामान को दूर-दराज के बाजारों तक सुगमता से पहुंचाकर रेलवे ने देश के औद्योगिक विकास को गति दी है। आधुनिक काल में स्वदेशी तकनीक से निर्मित वंदे भारत जैसी सेमी हाई-स्पीड ट्रेनों ने यात्री सुविधाओं और गतिशीलता के नए मानक स्थापित किए हैं। स्टेशनों का आधुनिक पुनर्विकास, स्वचालित सिग्नल प्रणाली और डिजिटल टिकटिंग सेवाओं ने आम यात्रियों की यात्रा को अत्यंत सुखद और सम्मानजनक बना दिया है। समर्पित माल ढुलाई गलियारों का निर्माण औद्योगिक परिवहन की लागत घटाने और पर्यावरण प्रदूषण कम करने में क्रांतिकारी भूमिका निभा रहा है। रेल तंत्र का निरंतर आधुनिकीकरण विकसित और आत्मनिर्भर भारत के संकल्प को धरातल पर साकार कर रहा है।",
+    p2: "रेलवे कर्मचारियों की कर्तव्यनिष्ठा और तकनीकी आधुनिकीकरण ने संरक्षा और समयबद्धता के नए कीर्तिमान स्थापित किए हैं। पर्यटन गलियारों और तीर्थ स्थलों को जोड़ने वाली विशेष रेल सेवाएं देश की सांस्कृतिक विरासत को संजोने में महत्वपूर्ण योगदान दे रही हैं। भारतीय रेल का यह गौरवशाली सफर राष्ट्र की प्रगति का सतत प्रतीक है।"
+  },
+  {
+    id: "hindi-mock-03",
+    title: "Hindi Typing Mock 03: डिजिटल इंडिया और पारदर्शी लोक प्रशासन",
+    category: "SSC CGL",
+    examLevel: "Graduate",
+    language: "Hindi",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "डिजिटल इंडिया अभियान ने देश के प्रशासनिक ढांचे और आम नागरिक के जीवन स्तर में अभूतपूर्व सकारात्मक परिवर्तन किया है। सरकारी कल्याणकारी योजनाओं का लाभ सीधे लाभार्थियों के बैंक खातों में स्थानांतरित होने से बिचौलियों की मध्यस्थता पूरी तरह समाप्त हो गई है। आधार पहचान, जन-धन बैंक खाते और मोबाइल कनेक्टिविटी के त्रिवेणी संगम ने निर्धन परिवारों को सशक्त बनाया है। आज सुदूर ग्रामीण अंचलों में भी सामान्य सेवा केंद्रों के माध्यम से किसान, छात्र और वृद्धजन विभिन्न प्रमाणपत्र, भूमि अभिलेख और पेंशन आवेदन घर बैठे प्राप्त कर रहे हैं। डिजिटल भुगतान की सहज व्यवस्था ने छोटे व्यापारियों और रेहड़ी-पटरी वालों को भी औपचारिक वित्तीय व्यवस्था का अभिन्न अंग बना दिया है। प्रशासनिक प्रक्रियाओं के डिजिटलीकरण से सरकारी कार्यप्रणाली में उत्तरदायित्व और समयबद्धता सुनिश्चित हुई है। तकनीक का यह लोकतंत्रीकरण देश के सर्वांगीण विकास का मजबूत संबल बन चुका है।",
+    p2: "ई-गवर्नेंस के माध्यम से सरकारी प्रक्रियाओं को पारदर्शी और सुगम बनाकर भ्रष्टाचार पर प्रभावी अंकुश लगाया गया है। ग्रामीण युवाओं को डिजिटल कौशल प्रदान कर आत्मनिर्भर बनाया जा रहा है। तकनीक के इस रचनात्मक उपयोग से प्रशासनिक सेवाएं अंतिम छोर तक पहुंच रही हैं।"
+  },
+  {
+    id: "hindi-mock-04",
+    title: "Hindi Typing Mock 04: पर्यावरण संरक्षण और सतत विकास की अनिवार्यता",
+    category: "RRB NTPC UG",
+    examLevel: "Undergraduate",
+    language: "Hindi",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    p1: "प्राकृतिक संसाधनों का विवेकपूर्ण उपयोग और पर्यावरण का संरक्षण वर्तमान पीढ़ी की सर्वोच्च नैतिक जिम्मेदारी है। अनियंत्रित औद्योगिकीकरण और वृक्षों की अंधाधुंध कटाई से भूजल स्तर में भारी गिरावट आई है तथा जलवायु परिवर्तन के गंभीर संकट उत्पन्न हो रहे हैं। सौर ऊर्जा, पवन ऊर्जा और हरित हाइड्रोजन जैसे नवीकरणीय ऊर्जा स्रोतों का व्यापक प्रसार कार्बन उत्सर्जन को नियंत्रित करने का प्रभावी मार्ग है। वनों का संरक्षण और नदियों का पुनर्जीवन न केवल जैव विविधता की रक्षा करता है बल्कि आने वाली पीढ़ियों के अस्तित्व को भी सुरक्षित रखता है। प्लास्टिक के एकल उपयोग को त्यागना, जल संचयन के लिए वर्षा जल संग्रहण प्रणालियां स्थापित करना और सार्वजनिक परिवहन का अधिकाधिक उपयोग करना प्रत्येक सजग नागरिक का पुनीत कर्तव्य है। सतत विकास की अवधारणा यह सिखाती है कि आर्थिक प्रगति पर्यावरण के विनाश की कीमत पर कभी संभव नहीं हो सकती।",
+    p2: "पर्यावरण अनुकूल जीवनशैली अपनाकर ही हम प्राकृतिक आपदाओं और प्रदूषण से मुक्ति पा सकते हैं। भावी पीढ़ियों के लिए शुद्ध वायु, स्वच्छ जल और हरी-भरी पृथ्वी को संरक्षित रखना हमारा सामूहिक धर्म है। सतत विकास की यह यात्रा प्रकृति के साथ सामंजस्य बनाकर ही पूरी हो सकती है।"
+  }
+];
+
+// Combine all categories and format
+const finalPassages = [];
+
+cglMocks.forEach(m => {
+  const fullText = (m.p1 + " " + m.p2).trim();
+  finalPassages.push({
+    id: m.id,
+    title: m.title,
+    category: m.category,
+    examLevel: m.examLevel,
+    language: m.language,
+    difficulty: "Moderate",
+    targetKeystrokes: 2000,
+    durationMinutes: 15,
+    text: fullText
+  });
+});
+
+chslMocks.forEach(m => {
+  const fullText = (m.p1 + " " + m.p2).trim();
+  finalPassages.push({
+    id: m.id,
+    title: m.title,
+    category: m.category,
+    examLevel: m.examLevel,
+    language: m.language,
+    difficulty: "Moderate",
+    targetKeystrokes: 1750,
+    durationMinutes: 10,
+    text: fullText
+  });
+});
+
+ntpcGradMocks.forEach(m => {
+  const fullText = (m.p1 + " " + m.p2).trim();
+  finalPassages.push({
+    id: m.id,
+    title: m.title,
+    category: m.category,
+    examLevel: m.examLevel,
+    language: m.language,
+    difficulty: "Moderate",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    text: fullText
+  });
+});
+
+ntpcUgMocks.forEach(m => {
+  const fullText = (m.p1 + " " + m.p2).trim();
+  finalPassages.push({
+    id: m.id,
+    title: m.title,
+    category: m.category,
+    examLevel: m.examLevel,
+    language: m.language,
+    difficulty: "Moderate",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    text: fullText
+  });
+});
+
+hindiMocks.forEach(m => {
+  const fullText = (m.p1 + " " + m.p2).trim();
+  finalPassages.push({
+    id: m.id,
+    title: m.title,
+    category: m.category,
+    examLevel: m.examLevel,
+    language: m.language,
+    difficulty: "Moderate",
+    targetKeystrokes: 1500,
+    durationMinutes: 10,
+    text: fullText
+  });
+});
+
+fs.writeFileSync(path.join(__dirname, 'server', 'passages.json'), JSON.stringify(finalPassages, null, 2), 'utf-8');
+console.log('Successfully wrote full length passages. Total:', finalPassages.length);
+
+let allValid = true;
+finalPassages.forEach(p => {
+  const len = p.text.length;
+  const target = p.targetKeystrokes;
+  const ok = len >= target;
+  if (!ok) allValid = false;
+  console.log(`${p.id.padEnd(14)} | ${p.category.padEnd(19)} | Len: ${String(len).padStart(4)} | Target: ${target} | ${ok ? 'VALID PASSAGE (FULL)' : 'SHORT (FAILED)'}`);
+});
+
+console.log('ALL PASSAGES SATISFY TARGET KEYSTROKES:', allValid);

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "user-cgl-1",
+    "email": "ashish.cgl@gmail.com",
+    "password": "password123",
+    "name": "Ashish Kumar",
+    "rollNo": "2401058392",
+    "category": "UR",
+    "examType": "SSC_CGL",
+    "createdAt": "2026-10-14T18:09:01.163Z"
+  },
+  {
+    "id": "user-ntpc-2",
+    "email": "rahul.ntpc@gmail.com",
+    "password": "password123",
+    "name": "Rahul Verma",
+    "rollNo": "2409817263",
+    "category": "OBC",
+    "examType": "RRB_NTPC_GRAD",
+    "createdAt": "2026-10-14T18:09:01.163Z"
+  },
+  {
+    "id": "user-1792001554520",
+    "email": "testuser@gmail.com",
+    "password": "password123",
+    "name": "Rohan Sharma",
+    "rollNo": "2401099881",
+    "category": "EWS",
+    "examType": "SSC_CGL",
+    "createdAt": "2026-10-14T18:12:34.520Z"
+  },
+  {
+    "id": "user-1792001751067",
+    "email": "sarkar@gmail.com",
+    "password": "1234",
+    "name": "ateet",
+    "rollNo": "SSC-7386971565",
+    "category": "OBC",
+    "examType": "SSC_CGL",
+    "createdAt": "2026-10-14T18:15:51.067Z"
+  }
+]
