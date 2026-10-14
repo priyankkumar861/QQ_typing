@@ -9,6 +9,7 @@ import HistoryView from './components/HistoryView';
 import ExamRulesView from './components/ExamRulesView';
 import TouchTypingTrainer from './components/TouchTypingTrainer';
 import LoginPage from './components/LoginPage';
+import AdminDashboard from './components/AdminDashboard';
 
 export default function App() {
   // Auth User State (Gmail & Password Session)
@@ -21,6 +22,14 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState(() => {
+    // Hidden Secret Admin Panel (Accessible only to owner via ?admin=quizlauncher)
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === 'quizlauncher') {
+        return 'admin';
+      }
+    } catch (e) {}
+
     // If not logged in, prompt login screen initially
     const savedUser = localStorage.getItem('ssc_auth_user');
     return savedUser ? 'catalog' : 'login';
@@ -287,6 +296,11 @@ export default function App() {
           {/* Official SSC & Railway Rules */}
           {activeTab === 'rules' && (
             <ExamRulesView />
+          )}
+
+          {/* Hidden Admin Analytics Dashboard */}
+          {activeTab === 'admin' && (
+            <AdminDashboard onInspectAttempt={(record) => setActiveResult(record)} />
           )}
 
         </main>

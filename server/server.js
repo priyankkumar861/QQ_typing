@@ -320,6 +320,72 @@ app.delete('/api/history', (req, res) => {
   res.json({ success: true, message: 'History cleared' });
 });
 
+// 6.5 Admin Student Analytics (See all students, logins, and test usage)
+app.get('/api/admin/analytics', (req, res) => {
+  try {
+    const users = readUsers();
+    const history = readHistory();
+
+    const totalStudents = users.length;
+    const totalTestsTaken = history.length;
+    const qualifiedCount = history.filter(h => h.isQualified).length;
+    const overallPassRate = totalTestsTaken > 0 ? Math.round((qualifiedCount / totalTestsTaken) * 100) : 0;
+    const avgNetWPM = totalTestsTaken > 0 ? Math.round(history.reduce((a, b) => a + (b.netWPM || 0), 0) / totalTestsTaken) : 0;
+
+    // Student summary with activity stats
+    const studentStats = users.map(u => {
+      const userAttempts = history.filter(h => h.userEmail && h.userEmail.toLowerCase() === u.email.toLowerCase());
+      const bestWPM = userAttempts.length > 0 ? Math.max(...userAttempts.map(h => h.netWPM || 0)) : 0;
+      const lastActive = userAttempts.length > 0 ? userAttempts[0].timestamp : u.createdAt || null;
+      const passCount = userAttempts.filter(h => h.isQualified).length;
+
+      return {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        rollNo: u.rollNo,
+        category: u.category || 'UR',
+        examType: u.examType || 'SSC_CGL',
+        joinedAt: u.createdAt,
+        totalAttempts: userAttempts.length,
+        bestWPM,
+        passCount,
+        lastActive
+      };
+    });
+
+    // Recent 100 tests activity stream
+    const recentActivity = history.slice(0, 100).map(h => ({
+      id: h.id,
+      candidateName: h.candidateName || 'Candidate',
+      userEmail: h.userEmail || '—',
+      rollNo: h.rollNo || '—',
+      passageTitle: h.passageTitle || 'Typing Practice',
+      timestamp: h.timestamp,
+      netWPM: h.netWPM || 0,
+      accuracy: h.accuracy || 0,
+      errorPercentage: h.errorPercentage || 0,
+      isQualified: !!h.isQualified,
+      examType: h.examType || 'SSC_CGL',
+      category: h.category || 'UR'
+    }));
+
+    res.json({
+      success: true,
+      analytics: {
+        totalStudents,
+        totalTestsTaken,
+        overallPassRate,
+        avgNetWPM,
+        students: studentStats,
+        recentActivity
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Could not fetch admin analytics' });
+  }
+});
+
 // 7. Exam Guidelines / Rules info
 app.get('/api/exam-rules', (req, res) => {
   res.json({
