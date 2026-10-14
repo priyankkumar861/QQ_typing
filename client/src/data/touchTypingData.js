@@ -1,168 +1,370 @@
+/**
+ * TypingClub / EdClub-Inspired 10-Finger Interactive Curriculum
+ * Structured in Gamified Stages (Home Row -> Top Row -> Bottom Row -> Shift -> Numbers -> Speed)
+ */
+
+export const TOUCH_TYPING_STAGES = [
+  {
+    id: 'stage_home',
+    title: 'Stage 1: Home Row Foundations',
+    icon: '🏠',
+    description: 'Learn the primary rest position and anchor fingers on ASDF and JKL;'
+  },
+  {
+    id: 'stage_top',
+    title: 'Stage 2: Top Row Reach',
+    icon: '⬆️',
+    description: 'Upward finger extensions for QWERT and YUIOP without wrist lifting'
+  },
+  {
+    id: 'stage_bottom',
+    title: 'Stage 3: Bottom Row Curl',
+    icon: '⬇️',
+    description: 'Inward finger curls for ZXCVB and NM,./'
+  },
+  {
+    id: 'stage_shift',
+    title: 'Stage 4: Capital Letters & Shift Key',
+    icon: '🔠',
+    description: 'Opposite Pinky Shift rule for capitalization required in DEST'
+  },
+  {
+    id: 'stage_numbers',
+    title: 'Stage 5: Number Row & Punctuation',
+    icon: '🔢',
+    description: 'Top numerical keys and exam standard punctuation marks'
+  },
+  {
+    id: 'stage_speed',
+    title: 'Stage 6: SSC & Railway Speed Drills',
+    icon: '🚀',
+    description: 'High-frequency exam vocabulary and qualifying speed benchmarks'
+  }
+];
+
 export const TOUCH_TYPING_LESSONS = [
+  // STAGE 1: HOME ROW FOUNDATIONS
   {
     id: 1,
-    level: "Step 1",
-    title: "Home Row Foundations (ASDF - JKL;)",
-    subtitle: "Left hand resting on ASDF, Right hand resting on JKL;",
-    fingerFocus: "All Fingers (Home Position)",
-    text: "fff jjj ddd kkk sss lll aaa ;;; fj dk sl a; ff jj dd kk ss ll aa ;; fjdk sla; asdf jkl; asdf jkl; aj sk dl f; fa sj dk la",
+    stageId: 'stage_home',
+    level: "Lesson 1",
+    badge: "F & J",
+    title: "Anchor Keys (F & J)",
+    subtitle: "Locate tactile bumps with left and right index fingers",
+    fingerFocus: "Index Fingers (Left: F, Right: J)",
+    text: "f j f j ff jj fj jf ff jj fj fj f f j j ff jj fj jf ff jf fj jj ff",
     targetAccuracy: 95,
-    targetWPM: 15,
-    description: "Keep your index fingers anchored on F and J (feel the small tactile bumps). Curve your fingers comfortably."
+    targetWPM: 14,
+    description: "Feel the small tactile bumps on F and J. Rest your left index on F and right index on J."
   },
   {
     id: 2,
-    level: "Step 2",
-    title: "Home Row Extended (G and H Keys)",
-    subtitle: "Left Index reaches G, Right Index reaches H",
-    fingerFocus: "Index Fingers (F -> G, J -> H)",
-    text: "fg jh fg jh gf hj gf hj fag jah gak had has hag half flag dash flash salad glad gash jash flash glad half dash flag salad glad",
+    stageId: 'stage_home',
+    level: "Lesson 2",
+    badge: "D & K",
+    title: "Middle Fingers (D & K)",
+    subtitle: "Left Middle on D, Right Middle on K",
+    fingerFocus: "Middle Fingers (Left: D, Right: K)",
+    text: "d k d k dd kk dk kd dd kk dk kd fd jk df kj fdk jkd dkf kjd dd kk",
     targetAccuracy: 95,
-    targetWPM: 18,
-    description: "Stretch your left index finger rightward to tap G, then return to F. Stretch right index leftward to tap H, then return to J."
+    targetWPM: 15,
+    description: "Curve your middle fingers. Keep index fingers relaxed on their F and J anchor positions."
   },
   {
     id: 3,
-    level: "Step 3",
-    title: "Top Row Left Hand (Q, W, E, R, T)",
-    subtitle: "Reaching upward with left fingers",
-    fingerFocus: "Left Pinky (Q), Ring (W), Middle (E), Index (R, T)",
-    text: "red wed read tree water target rest wear quest treat trade great sweat steer tweet westward rage water target treat sweet target",
+    stageId: 'stage_home',
+    level: "Lesson 3",
+    badge: "S & L",
+    title: "Ring Fingers (S & L)",
+    subtitle: "Left Ring on S, Right Ring on L",
+    fingerFocus: "Ring Fingers (Left: S, Right: L)",
+    text: "s l s l ss ll sl ls ss ll sl ls fs jl sf lj dsk kld sdl lds ss ll",
     targetAccuracy: 95,
-    targetWPM: 20,
-    description: "Reach upward cleanly without lifting your wrists off the desk. Always return to home row ASDF."
+    targetWPM: 16,
+    description: "Ring fingers need deliberate practice. Keep wrists elevated slightly above the desk."
   },
   {
     id: 4,
-    level: "Step 4",
-    title: "Top Row Right Hand (Y, U, I, O, P)",
-    subtitle: "Reaching upward with right fingers",
-    fingerFocus: "Right Index (Y, U), Middle (I), Ring (O), Pinky (P)",
-    text: "you pop pipe pool your point input union output puppy yellow polite utility option policy pilot priority loop pulp opinion",
+    stageId: 'stage_home',
+    level: "Lesson 4",
+    badge: "A & ;",
+    title: "Pinky Keys (A & ;)",
+    subtitle: "Left Pinky on A, Right Pinky on Semicolon",
+    fingerFocus: "Pinky Fingers (Left: A, Right: ;)",
+    text: "a ; a ; aa ;; a; ;a asdf jkl; asdf jkl; aa ;; a; ;a fa ;j da ;k sa ;l",
     targetAccuracy: 95,
-    targetWPM: 22,
-    description: "Use right index for Y and U, middle for I, ring for O, and pinky for P. Keep fingers light and bouncy."
+    targetWPM: 16,
+    description: "Rest pinkies gently on A and Semicolon. You now have all 8 home row rest positions!"
   },
   {
     id: 5,
-    level: "Step 5",
-    title: "Home & Top Row Combined Words",
-    subtitle: "Forming comprehensive English words",
-    fingerFocus: "Both Hands Upper & Home Rows",
-    text: "the there their these those report power order request state paper total trade wrote quote update figure route write quiet output",
+    stageId: 'stage_home',
+    level: "Lesson 5",
+    badge: "G & H",
+    title: "Center Stretch (G & H)",
+    subtitle: "Index finger reach inward to G and H",
+    fingerFocus: "Index Fingers (F -> G, J -> H)",
+    text: "fg jh fg jh gf hj gf hj fag jah gak had has hag half flag dash flash salad glad",
     targetAccuracy: 95,
-    targetWPM: 25,
-    description: "Focus on fluid rhythm rather than rushing. Accuracy first, speed will follow naturally."
+    targetWPM: 18,
+    description: "Reach left index rightward for G, then snap back to F. Reach right index leftward for H, then return to J."
   },
   {
     id: 6,
-    level: "Step 6",
-    title: "Bottom Row Left Hand (Z, X, C, V, B)",
-    subtitle: "Reaching downward with left hand fingers",
-    fingerFocus: "Left Pinky (Z), Ring (X), Middle (C), Index (V, B)",
-    text: "cab car cat bat base cave vase zero zone box check verb brave balance batch cable civil voice brief budget vibrant carbon",
-    targetAccuracy: 95,
-    targetWPM: 22,
-    description: "Slightly curl your fingers inward to strike bottom row keys. Index finger covers both V and B."
+    stageId: 'stage_home',
+    level: "Lesson 6",
+    badge: "Words",
+    title: "Home Row Words Mastery",
+    subtitle: "Forming complete real words using only the home row",
+    fingerFocus: "All Fingers (Home Row Coordination)",
+    text: "ask all fall flash glad half dash salad sash falls flask glass slash salsa alfa",
+    targetAccuracy: 96,
+    targetWPM: 20,
+    description: "Smooth, continuous rhythm is better than fast bursts with typos. Keep eyes glued to screen."
   },
+
+  // STAGE 2: TOP ROW REACH
   {
     id: 7,
-    level: "Step 7",
-    title: "Bottom Row Right Hand (N, M, Comma, Period)",
-    subtitle: "Reaching downward with right hand fingers",
-    fingerFocus: "Right Index (N, M), Middle (,), Ring (.), Pinky (/)",
-    text: "man men name main norm moon menu mind minor manner money machine mention maintain normal medium morning dynamic modern minimum",
+    stageId: 'stage_top',
+    level: "Lesson 7",
+    badge: "E & I",
+    title: "Top Row Vowels (E & I)",
+    subtitle: "Reach upward with middle fingers",
+    fingerFocus: "Middle Fingers (D -> E, K -> I)",
+    text: "de ki de ki ed ik ed ik did kid die lie side like file lake life desk silk idle",
     targetAccuracy: 95,
-    targetWPM: 24,
-    description: "Use right index for N and M. Keep wrists steady and use finger curvature."
+    targetWPM: 20,
+    description: "Reach your left middle finger up from D to E. Reach your right middle finger up from K to I."
   },
   {
     id: 8,
-    level: "Step 8",
-    title: "Complete Alphabet Integration (A to Z)",
-    subtitle: "All letters across all 3 primary rows",
-    fingerFocus: "All 10 Fingers in Coordination",
-    text: "pack my box with five dozen liquor jugs the quick brown fox jumps over the lazy dog sphinx of black quartz judge my vow public exams",
+    stageId: 'stage_top',
+    level: "Lesson 8",
+    badge: "R & U",
+    title: "Index Reach (R & U)",
+    subtitle: "Reach upward with index fingers",
+    fingerFocus: "Index Fingers (F -> R, J -> U)",
+    text: "fr ju fr ju rf uj rf uj fur jug red jud rude rule cure sure true user fire ride",
     targetAccuracy: 95,
-    targetWPM: 28,
-    description: "These sentences are pangrams containing every letter in the English alphabet. Practice maintaining rhythm."
+    targetWPM: 22,
+    description: "Left index extends to R; right index extends to U. Always snap back to home position."
   },
   {
     id: 9,
-    level: "Step 9",
-    title: "Shift Key & Capitalization Mastery",
-    subtitle: "Opposite Pinky Shift Technique (SSC Requirement)",
-    fingerFocus: "Opposite Hand Pinky on Shift Key",
-    text: "India Delhi Parliament Mumbai Kolkata Chennai Railways Commission Bharat Constitution Digital Technology Governance Service",
-    targetAccuracy: 96,
-    targetWPM: 28,
-    description: "SSC rule: To type capital 'I' (right hand), hold Left Shift with left pinky. To type capital 'D' (left hand), hold Right Shift with right pinky!"
+    stageId: 'stage_top',
+    level: "Lesson 9",
+    badge: "T & Y",
+    title: "Top Center Keys (T & Y)",
+    subtitle: "Extended upward reach with index fingers",
+    fingerFocus: "Index Fingers (F -> T, J -> Y)",
+    text: "ft jy ft jy tf yj tf yj try yet they type tray stay easy city tiny story date",
+    targetAccuracy: 95,
+    targetWPM: 22,
+    description: "Stretch diagonally upward: left index to T, right index to Y."
   },
   {
     id: 10,
-    level: "Step 10",
-    title: "Numbers & Numerical Keystrokes",
-    subtitle: "Number row (1 2 3 4 5 6 7 8 9 0)",
-    fingerFocus: "Finger extensions to top number row",
-    text: "10 25 35 45 50 100 2024 2026 1947 1857 750 1750 2000 10500 9000 300 450 890 123 456 789 2025 9876 5432 1098 7654 3210 1000",
-    targetAccuracy: 94,
-    targetWPM: 25,
-    description: "Reach straight up from home row. Essential for exam statistics, dates, and official notification codes."
+    stageId: 'stage_top',
+    level: "Lesson 10",
+    badge: "W & O",
+    title: "Ring Finger Reach (W & O)",
+    subtitle: "Upward reach with ring fingers",
+    fingerFocus: "Ring Fingers (S -> W, L -> O)",
+    text: "sw lo sw lo ws ol ws ol low row slow flow blow word work look took book wood wool",
+    targetAccuracy: 95,
+    targetWPM: 22,
+    description: "Left ring finger reaches to W; right ring finger reaches to O."
   },
   {
     id: 11,
-    level: "Step 11",
-    title: "Punctuation & Symbols Workout",
-    subtitle: "Full stop, commas, semicolons, brackets, hyphens",
-    fingerFocus: "Right Pinky & Ring Finger Precision",
-    text: "Delhi, Mumbai, and Kolkata; Article 21 (Right to Life); socio-economic, pre-budget, self-reliant; 25% growth, 35 WPM rate; policy-makers.",
-    targetAccuracy: 96,
-    targetWPM: 26,
-    description: "SSC penalizes half-mistake for omitted commas or full stops. Never add space before a comma or period; always add one space after."
+    stageId: 'stage_top',
+    level: "Lesson 11",
+    badge: "Q & P",
+    title: "Pinky Outer Reach (Q & P)",
+    subtitle: "Upward reach with outer pinky fingers",
+    fingerFocus: "Pinky Fingers (A -> Q, ; -> P)",
+    text: "aq ;p aq ;p qa p; qa p; quick quote quiet equip point party power report paper drop",
+    targetAccuracy: 95,
+    targetWPM: 22,
+    description: "Left pinky reaches up to Q; right pinky reaches up to P."
   },
+
+  // STAGE 3: BOTTOM ROW CURL
   {
     id: 12,
-    level: "Step 12",
-    title: "Frequent English N-Grams & Prefixes",
-    subtitle: "Building muscle memory on the most common syllables",
-    fingerFocus: "Finger Flow & Fluid Motion",
-    text: "tion ment ship able ible inter trans intro under over auto tele micro multi nation action direct condition development employment",
-    targetAccuracy: 96,
-    targetWPM: 32,
-    description: "Typing syllables as single muscle-memory chords is the secret to breaking past 40 WPM!"
+    stageId: 'stage_bottom',
+    level: "Lesson 12",
+    badge: "V & M",
+    title: "Bottom Index Keys (V & M)",
+    subtitle: "Curl downward with index fingers",
+    fingerFocus: "Index Fingers (F -> V, J -> M)",
+    text: "fv jm fv jm vf mj vf mj van man move view make mail vim form firm calm term farm",
+    targetAccuracy: 95,
+    targetWPM: 22,
+    description: "Curl left index inward to V; curl right index inward to M."
   },
   {
     id: 13,
-    level: "Step 13",
-    title: "SSC & Railway High-Frequency Vocabulary",
-    subtitle: "Words commonly appearing in CGL/CHSL/RRB passages",
-    fingerFocus: "Exam Vocabulary Endurance",
-    text: "administration infrastructure transformation parliamentary constitution sustainable industrialization expenditure logistics integration",
-    targetAccuracy: 97,
-    targetWPM: 34,
-    description: "These 10 to 15 character words appear in almost every official DEST exam passage."
+    stageId: 'stage_bottom',
+    level: "Lesson 13",
+    badge: "C & ,",
+    title: "Middle Finger Curl (C & Comma)",
+    subtitle: "Curl downward with middle fingers",
+    fingerFocus: "Middle Fingers (D -> C, K -> Comma)",
+    text: "dc k, dc k, cd ,k cd ,k car, can, act, cut, ace, ice, race, pace, case, fact, lock",
+    targetAccuracy: 95,
+    targetWPM: 22,
+    description: "Curl left middle down to C; curl right middle down to comma (,)."
   },
   {
     id: 14,
-    level: "Step 14",
-    title: "Speed Booster Drill (Target: 35 WPM Benchmark)",
-    subtitle: "Qualifying speed for SSC CHSL & Railway NTPC",
-    fingerFocus: "Steady Cadence & Speed Sustenance",
-    text: "The rapid pace of technological change requires strong digital capabilities. Public sector enterprises continue to play a pivotal role in national development by fostering innovation and creating quality employment opportunities across emerging sectors.",
-    targetAccuracy: 96,
-    targetWPM: 35,
-    description: "Maintain a steady 35 WPM pace without pause. Smooth typing beats bursts with errors."
+    stageId: 'stage_bottom',
+    level: "Lesson 14",
+    badge: "X & .",
+    title: "Ring Finger Curl (X & Period)",
+    subtitle: "Curl downward with ring fingers",
+    fingerFocus: "Ring Fingers (S -> X, L -> Period)",
+    text: "sx l. sx l. xs .l xs .l box. fox. tax. mix. fix. max. next. text. exam. exit. axis.",
+    targetAccuracy: 95,
+    targetWPM: 24,
+    description: "Left ring curls to X; right ring curls to period (.). Essential for exam sentence endings."
   },
   {
     id: 15,
-    level: "Step 15 (PRO)",
-    title: "Mastery Drill (Target: 45+ WPM Pro)",
-    subtitle: "Error-free high speed typing for Rank 1 aspirants",
-    fingerFocus: "Full Keyboard Mastery",
-    text: "Comprehensive administrative reforms and transparent governance frameworks are vital to accelerate economic momentum. Consistent dedication, precision in keystroke execution, and unwavering focus empower candidates to achieve exceptional results in competitive examinations.",
+    stageId: 'stage_bottom',
+    level: "Lesson 15",
+    badge: "Z & /",
+    title: "Pinky Curl Keys (Z & /)",
+    subtitle: "Curl downward with pinkies",
+    fingerFocus: "Pinky Fingers (A -> Z, ; -> /)",
+    text: "az ;/ az ;/ za /; za /; zero zone zip maze size zoom lazy quiz prize crazy freeze",
+    targetAccuracy: 95,
+    targetWPM: 22,
+    description: "Left pinky curls down to Z; right pinky curls down to slash (/)."
+  },
+  {
+    id: 16,
+    stageId: 'stage_bottom',
+    level: "Lesson 16",
+    badge: "B & N",
+    title: "Center Bottom Keys (B & N)",
+    subtitle: "Index reach diagonally downward",
+    fingerFocus: "Index Fingers (F -> B, J -> N)",
+    text: "fb jn fb jn bf nj bf nj ban nab bat ben bun bin barn born born bean bank bone bond",
+    targetAccuracy: 95,
+    targetWPM: 24,
+    description: "Stretch left index down-right to B; stretch right index down-left to N."
+  },
+
+  // STAGE 4: CAPITAL LETTERS & SHIFT KEY
+  {
+    id: 17,
+    stageId: 'stage_shift',
+    level: "Lesson 17",
+    badge: "L-Shift",
+    title: "Left Shift (Right Hand Caps)",
+    subtitle: "Hold Left Shift with left pinky for right hand capital letters",
+    fingerFocus: "Left Pinky on Shift + Right Hand Key",
+    text: "India Japan Korea London Mumbai New Delhi Patna Punjab Rajasthan Surat Uttar Pradesh",
+    targetAccuracy: 96,
+    targetWPM: 25,
+    description: "Official SSC Rule: Always hold Left Shift with left pinky while typing right hand keys (I, J, K, L, M, N, O, P, U, Y)!"
+  },
+  {
+    id: 18,
+    stageId: 'stage_shift',
+    level: "Lesson 18",
+    badge: "R-Shift",
+    title: "Right Shift (Left Hand Caps)",
+    subtitle: "Hold Right Shift with right pinky for left hand capital letters",
+    fingerFocus: "Right Pinky on Shift + Left Hand Key",
+    text: "Delhi Bharat Chennai Gujarat Assam Bengal Goa Haryana Kerala Tamil Telangana",
+    targetAccuracy: 96,
+    targetWPM: 25,
+    description: "Official SSC Rule: Always hold Right Shift with right pinky while typing left hand keys (A, B, C, D, E, F, G, R, S, T, V, W, X, Z)!"
+  },
+
+  // STAGE 5: NUMBER ROW & PUNCTUATION
+  {
+    id: 19,
+    stageId: 'stage_numbers',
+    level: "Lesson 19",
+    badge: "Numbers",
+    title: "Number Row Mastery (1 to 0)",
+    subtitle: "Reaching upward to numerical keys",
+    fingerFocus: "All Fingers (Number Row)",
+    text: "10 20 30 40 50 100 200 500 1000 2024 2026 1947 1857 750 1750 2000 10500 9000",
+    targetAccuracy: 95,
+    targetWPM: 24,
+    description: "Essential for government notifications, fiscal years, codes, and numerical exam data."
+  },
+  {
+    id: 20,
+    stageId: 'stage_numbers',
+    level: "Lesson 20",
+    badge: "Punctuation",
+    title: "Official Exam Punctuation",
+    subtitle: "Commas, periods, colons, hyphens, and quotes",
+    fingerFocus: "Precision Punctuation",
+    text: "Commission: SSC & RRB; Year: 2026. Target: 100% precision. Note: 'Excellence requires daily dedication.'",
+    targetAccuracy: 96,
+    targetWPM: 25,
+    description: "SSC penalizes omitted punctuation as half-mistakes. Always add a space after a comma, period, or colon."
+  },
+
+  // STAGE 6: SSC & RAILWAY SPEED DRILLS
+  {
+    id: 21,
+    stageId: 'stage_speed',
+    level: "Lesson 21",
+    badge: "N-Grams",
+    title: "Frequent English Syllables",
+    subtitle: "N-Grams and prefixes for rapid muscle memory",
+    fingerFocus: "Fluid Chords & Syllable Flow",
+    text: "tion ment ship able ible inter trans intro under over auto tele micro multi nation action direct condition development employment",
+    targetAccuracy: 96,
+    targetWPM: 30,
+    description: "Typing syllables as single muscle-memory chords is the secret to breaking past 35 WPM!"
+  },
+  {
+    id: 22,
+    stageId: 'stage_speed',
+    level: "Lesson 22",
+    badge: "27 WPM",
+    title: "SSC CGL DEST Benchmark (27 WPM)",
+    subtitle: "Official Data Entry Skill Test qualifying speed",
+    fingerFocus: "Exam Cadence & Calmness",
+    text: "Digital governance and modern administrative practices improve efficiency and public service delivery across all sectors of the national economy with transparency and accountability.",
+    targetAccuracy: 96,
+    targetWPM: 27,
+    description: "Maintain 27 WPM without pause. Accuracy above 95% guarantees qualification under UR cutoffs."
+  },
+  {
+    id: 23,
+    stageId: 'stage_speed',
+    level: "Lesson 23",
+    badge: "30 WPM",
+    title: "Railway RRB NTPC Benchmark (30 WPM)",
+    subtitle: "Official Railway NTPC Level 5 & Level 2 qualification standard",
+    fingerFocus: "Railway Speed Sustenance",
+    text: "Indian Railways operates one of the largest transportation networks in the world, connecting millions of citizens daily and fueling sustainable economic expansion through dedicated freight and passenger corridors.",
+    targetAccuracy: 96,
+    targetWPM: 30,
+    description: "RRB NTPC requires 30 WPM in English. Maintain smooth flow without looking at your physical keyboard."
+  },
+  {
+    id: 24,
+    stageId: 'stage_speed',
+    level: "Lesson 24",
+    badge: "35 WPM PRO",
+    title: "SSC CHSL Pro Benchmark (35 WPM)",
+    subtitle: "High speed mastery for top merit list candidates",
+    fingerFocus: "Pro Speed & Flawless Accuracy",
+    text: "Comprehensive administrative reforms, transparent institutional frameworks, and technological adoption empower nations to achieve sustainable growth, foster innovation, and secure prosperous livelihoods for future generations.",
     targetAccuracy: 98,
-    targetWPM: 45,
-    description: "Elite level typing. Maintain above 98% accuracy while sustaining 45+ Words Per Minute."
+    targetWPM: 35,
+    description: "Elite level typing. Maintain 35+ Words Per Minute while sustaining above 97% accuracy."
   }
 ];
 
