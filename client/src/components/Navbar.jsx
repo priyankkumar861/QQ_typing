@@ -46,10 +46,10 @@ export default function Navbar({
               </div>
               <div className="min-w-0">
                 <div className="flex items-center space-x-1.5 sm:space-x-2">
-                  <span className="font-extrabold text-sm sm:text-base md:text-lg tracking-tight text-gray-900 whitespace-nowrap">
-                    SSC & RRB <span className="text-blue-600">Typing Portal</span>
+                  <span className="font-extrabold text-xs sm:text-base md:text-lg tracking-tight text-gray-900 whitespace-nowrap">
+                    SSC & RRB <span className="text-blue-600">Typing</span>
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 shrink-0 whitespace-nowrap">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border border-blue-200 shrink-0 whitespace-nowrap hidden xs:inline-block">
                     CBT DEST
                   </span>
                 </div>

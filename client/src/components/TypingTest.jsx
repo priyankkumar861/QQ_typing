@@ -559,6 +559,11 @@ export default function TypingTest({
         </div>
       )}
 
+      {/* Mobile Device Physical Keyboard Notice */}
+      <div className="lg:hidden bg-amber-50 border-b border-amber-200 px-3 py-1.5 text-amber-800 text-[11px] font-medium flex items-center justify-between gap-2">
+        <span>⌨️ <strong>Mobile Tip:</strong> Official DEST exams require a physical keyboard. Connect via OTG or use Laptop/PC for exam speed.</span>
+      </div>
+
       {/* 2. Candidate Status Pill */}
       <div className="bg-white border-b border-slate-200 px-4 py-1.5 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-2 max-w-[1500px] w-full mx-auto">
         <div className="flex items-center space-x-4">

@@ -78,35 +78,35 @@ export default function MockTestCatalog({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
       
       {/* Distinctive Executive Header Banner (Customized Heading Style) */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-wrap gap-y-1">
             <span className="bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-800 text-white font-black text-[10px] sm:text-[11px] px-2.5 py-0.5 rounded uppercase tracking-wider shadow-2xs">
               CBT DEST Standard 2026
             </span>
-            <span className="text-xs text-slate-500 font-semibold tracking-wide">
+            <span className="text-[11px] sm:text-xs text-slate-500 font-semibold tracking-wide">
               SSC CGL Tier-II • CHSL • RRB NTPC
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1.5 flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight mt-1.5 flex items-center gap-2">
             <span>DEST Typing Mock Test Bench</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
-            Select any test below to configure <strong>Practice Mode (with live guidance & sidebar)</strong> or <strong>Real Exam Mode (Ediquity / TCS iON)</strong>. Commission evaluation rules are calculated with 100% precision.
+            Select any test below to configure <strong>Practice Mode</strong> or <strong>Real Exam Mode (Ediquity / TCS iON)</strong>.
           </p>
         </div>
 
         {/* Candidate Profile Card */}
-        <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-xl border border-gray-200">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center text-sm uppercase shadow-xs">
+        <div className="flex items-center space-x-3 bg-gray-50 p-2.5 sm:p-3 rounded-xl border border-gray-200 shrink-0 self-start md:self-auto w-full sm:w-auto">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center text-xs sm:text-sm uppercase shadow-xs shrink-0">
             {candidateInfo.name.charAt(0) || 'C'}
           </div>
-          <div className="text-xs">
-            <div className="font-bold text-gray-900">{candidateInfo.name}</div>
-            <div className="text-gray-500">
+          <div className="text-xs min-w-0">
+            <div className="font-bold text-gray-900 truncate max-w-[180px]">{candidateInfo.name}</div>
+            <div className="text-gray-500 text-[11px]">
               Roll: <span className="font-mono text-gray-700 font-semibold">{candidateInfo.rollNo}</span> ({candidateInfo.category})
             </div>
             <button
@@ -119,13 +119,13 @@ export default function MockTestCatalog({
         </div>
       </div>
 
-      {/* Filter Tabs (SSC CGL, SSC CHSL, RRB NTPC, Hindi) */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-2 flex-wrap gap-y-2">
+      {/* Filter Tabs (Smooth Horizontal Swipeable Row on Mobile) */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-3 sm:p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center space-x-2 overflow-x-auto pb-1 max-w-full no-scrollbar">
           
           <button
             onClick={() => setActiveFilter('ALL')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shrink-0 whitespace-nowrap ${
               activeFilter === 'ALL'
                 ? 'bg-gray-900 text-white shadow-xs'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -136,50 +136,50 @@ export default function MockTestCatalog({
 
           <button
             onClick={() => setActiveFilter('SSC_CGL')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center space-x-1.5 px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shrink-0 whitespace-nowrap ${
               activeFilter === 'SSC_CGL'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
             }`}
           >
             <Landmark className="w-3.5 h-3.5" />
-            <span>SSC CGL DEST (15 Min / 2000 KDPH)</span>
+            <span>SSC CGL DEST</span>
           </button>
 
           <button
             onClick={() => setActiveFilter('SSC_CHSL')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center space-x-1.5 px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shrink-0 whitespace-nowrap ${
               activeFilter === 'SSC_CHSL'
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>SSC CHSL (10 Min / 35 WPM)</span>
+            <span>SSC CHSL</span>
           </button>
 
           <button
             onClick={() => setActiveFilter('RRB_NTPC_GRAD')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center space-x-1.5 px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shrink-0 whitespace-nowrap ${
               activeFilter === 'RRB_NTPC_GRAD'
                 ? 'bg-amber-600 text-white shadow-xs'
                 : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
             }`}
           >
             <Train className="w-3.5 h-3.5" />
-            <span>NTPC Graduate (Level 5 / Senior Clerk)</span>
+            <span>NTPC Graduate (Level 5)</span>
           </button>
 
           <button
             onClick={() => setActiveFilter('RRB_NTPC_UG')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center space-x-1.5 px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shrink-0 whitespace-nowrap ${
               activeFilter === 'RRB_NTPC_UG'
                 ? 'bg-orange-600 text-white shadow-xs'
                 : 'bg-orange-50 text-orange-800 hover:bg-orange-100'
             }`}
           >
             <Train className="w-3.5 h-3.5" />
-            <span>NTPC Under Graduate (Level 2 / Jr Clerk)</span>
+            <span>NTPC UG (Level 2)</span>
           </button>
         </div>
 

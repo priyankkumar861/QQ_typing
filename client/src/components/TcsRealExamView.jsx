@@ -132,28 +132,28 @@ export default function TcsRealExamView({
       <div className="bg-white border-b border-gray-300 flex items-stretch justify-between shrink-0">
         
         {/* Left Section Header & Big Countdown Timer */}
-        <div className="flex-1 flex items-center justify-between px-4 py-2 min-w-0">
+        <div className="flex-1 flex items-center justify-between px-3 sm:px-4 py-2 min-w-0">
           
           {/* Angled Section A Tab */}
           <div 
-            className="bg-[#337ab7] text-white font-bold text-xs sm:text-sm py-1.5 px-6 select-none"
+            className="bg-[#337ab7] text-white font-bold text-xs sm:text-sm py-1.5 px-3 sm:px-6 select-none shrink-0"
             style={{ clipPath: 'polygon(0 0, 82% 0, 100% 100%, 0% 100%)' }}
           >
             Section A
           </div>
 
           {/* Big Bold Digital Countdown Clock */}
-          <div className="text-xl sm:text-2xl font-bold font-sans text-gray-900 tracking-tight flex items-center space-x-1">
+          <div className="text-base sm:text-2xl font-bold font-sans text-gray-900 tracking-tight flex items-center space-x-1">
             <span>Time Left:</span>
-            <span className={`font-mono ${timeLeftSeconds < 120 ? 'text-red-600 animate-pulse' : 'text-gray-900'}`}>
+            <span className={`font-mono font-bold ${timeLeftSeconds < 120 ? 'text-red-600 animate-pulse' : 'text-gray-900'}`}>
               {timeLeftFormatted}
             </span>
           </div>
 
         </div>
 
-        {/* Right Column Top: Candidate Profile Box */}
-        <div className="w-56 sm:w-64 border-l border-gray-300 px-3 py-2 flex items-center space-x-3 bg-white shrink-0">
+        {/* Right Column Top: Candidate Profile Box (Hidden on small mobile screens to prevent squishing) */}
+        <div className="hidden sm:flex w-56 sm:w-64 border-l border-gray-300 px-3 py-2 items-center space-x-3 bg-white shrink-0">
           
           {/* Authentic Metallic Candidate Silhouette Avatar Box */}
           <div className="w-14 h-14 sm:w-16 sm:h-16 border border-gray-400 bg-gradient-to-b from-gray-200 to-gray-300 rounded-xs flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
@@ -205,7 +205,7 @@ export default function TcsRealExamView({
         <div className="flex-1 bg-[#337ab7] text-white px-4 py-1.5 font-bold text-xs sm:text-sm">
           Keyboard Layout: QWERTY
         </div>
-        <div className="w-56 sm:w-64 border-l border-gray-300 bg-white" />
+        <div className="hidden sm:block w-56 sm:w-64 border-l border-gray-300 bg-white" />
       </div>
 
       {/* ============================================================== */}

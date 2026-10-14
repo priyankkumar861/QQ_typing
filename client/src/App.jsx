@@ -36,7 +36,12 @@ export default function App() {
   });
 
   const [examFilter, setExamFilter] = useState('ALL'); // 'ALL' | 'SSC_CGL' | 'SSC_CHSL' | 'RRB_NTPC'
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return false;
+  });
   
   const [passages, setPassages] = useState([]);
   const [currentPassage, setCurrentPassage] = useState(null);

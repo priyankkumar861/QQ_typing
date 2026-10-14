@@ -18,7 +18,8 @@ import {
   Grid,
   Send,
   ExternalLink,
-  LogIn
+  LogIn,
+  X
 } from 'lucide-react';
 
 export default function Sidebar({ 
@@ -37,18 +38,49 @@ export default function Sidebar({
     ? Math.round(history.reduce((a, b) => a + (b.netWPM || 0), 0) / totalTests) 
     : 0;
 
+  const handleNavClick = (tab) => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
+  };
+
   const handleExamClick = (examType) => {
     onSelectExamFilter(examType);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
+  };
+
+  const handleCandidateClick = () => {
+    setCandidateModalOpen(true);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
   };
 
   return (
-    <aside 
-      className={`
-        bg-white border-r border-gray-200 text-gray-800 flex flex-col h-full transition-all duration-300 z-30 shrink-0
-        ${isOpen ? 'w-64' : 'w-16'}
-      `}
-    >
-      <div className="shrink-0">
+    <>
+      {/* Mobile Backdrop Overlay (Closes drawer on outside click) */}
+      {isOpen && (
+        <div 
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 lg:hidden transition-opacity"
+          aria-hidden="true"
+        />
+      )}
+
+      <aside 
+        className={`
+          bg-white border-r border-gray-200 text-gray-800 flex flex-col h-full transition-all duration-300 z-50 shrink-0
+          fixed lg:static inset-y-0 left-0
+          ${isOpen 
+            ? 'w-72 sm:w-64 translate-x-0 shadow-2xl lg:shadow-none' 
+            : '-translate-x-full lg:translate-x-0 w-0 lg:w-16 overflow-hidden lg:overflow-visible'
+          }
+        `}
+      >
+        <div className="shrink-0">
         {/* Sidebar Header & Toggle */}
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           {isOpen ? (
@@ -73,17 +105,20 @@ export default function Sidebar({
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition hidden sm:block"
-            title={isOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition"
+            title={isOpen ? "Close Sidebar" : "Expand Sidebar"}
           >
-            {isOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            <X className="w-5 h-5 lg:hidden text-gray-600" />
+            <span className="hidden lg:inline">
+              {isOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </span>
           </button>
         </div>
 
         {/* Candidate Profile Widget */}
         <div className="p-3 border-b border-gray-100">
           <button
-            onClick={() => setCandidateModalOpen(true)}
+            onClick={handleCandidateClick}
             className={`w-full text-left p-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 transition flex items-center ${isOpen ? 'space-x-3' : 'justify-center'}`}
             title="Edit Candidate & Exam Category"
           >
@@ -174,7 +209,7 @@ export default function Sidebar({
 
           {/* All Mocks Catalog */}
           <button
-            onClick={() => setActiveTab('catalog')}
+            onClick={() => handleNavClick('catalog')}
             className={`w-full flex items-center p-2.5 rounded-xl font-medium transition ${
               isOpen ? 'space-x-3' : 'justify-center'
             } ${
@@ -264,7 +299,7 @@ export default function Sidebar({
 
           {/* 10-Finger Touch Typing (Step 1 to Pro) */}
           <button
-            onClick={() => setActiveTab('touch-typing')}
+            onClick={() => handleNavClick('touch-typing')}
             className={`w-full flex items-center p-2.5 rounded-xl font-medium transition ${
               isOpen ? 'space-x-3' : 'justify-center'
             } ${
@@ -291,7 +326,7 @@ export default function Sidebar({
 
           {/* Attempts History */}
           <button
-            onClick={() => setActiveTab('history')}
+            onClick={() => handleNavClick('history')}
             className={`w-full flex items-center p-2.5 rounded-xl font-medium transition ${
               isOpen ? 'space-x-3' : 'justify-center'
             } ${
@@ -316,7 +351,7 @@ export default function Sidebar({
 
           {/* Rules & Guidelines */}
           <button
-            onClick={() => setActiveTab('rules')}
+            onClick={() => handleNavClick('rules')}
             className={`w-full flex items-center p-2.5 rounded-xl font-medium transition ${
               isOpen ? 'space-x-3' : 'justify-center'
             } ${
@@ -332,7 +367,7 @@ export default function Sidebar({
 
           {/* Login / Switch Account Button */}
           <button
-            onClick={() => setActiveTab('login')}
+            onClick={() => handleNavClick('login')}
             className={`w-full flex items-center p-2.5 rounded-xl font-medium transition ${
               isOpen ? 'space-x-3' : 'justify-center'
             } ${
@@ -347,6 +382,7 @@ export default function Sidebar({
           </button>
 
         </nav>
-    </aside>
+      </aside>
+    </>
   );
 }

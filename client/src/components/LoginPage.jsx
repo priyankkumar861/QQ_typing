@@ -133,107 +133,25 @@ export default function LoginPage({ onLoginSuccess, onContinueAsGuest }) {
       {/* Subtle ambient grid pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-70" />
 
-      <div className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+      <div className="max-w-5xl mx-auto w-full flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 items-center relative z-10">
         
-        {/* Left Column: Platform Branding & Official Telegram Card */}
-        <div className="lg:col-span-5 space-y-6">
-          
-          {/* Logo & Portal Info */}
-          <div>
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3 shadow-xs">
-              <ShieldCheck className="w-4 h-4 text-blue-600" />
-              <span>Official CBT Typing Examination Portal</span>
-            </div>
-            
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              SSC & Railway <span className="text-blue-600">Typing Skill Test</span>
-            </h1>
-            
-            <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
-              Real TCS iON and Ediquity exam simulations for SSC CGL Tier-II (DEST), SSC CHSL, and RRB NTPC Graduate & Under Graduate exams with authentic category cutoff analysis.
-            </p>
+        {/* On Mobile: Top Compact Welcome Header */}
+        <div className="w-full lg:hidden text-center space-y-1.5 pt-2 pb-1">
+          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-semibold shadow-xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+            <span>Official CBT Typing Examination Portal</span>
           </div>
-
-          {/* TELEGRAM COMMUNITY CARD (CLEAN VIBRANT SKY THEME) */}
-          <div className="bg-gradient-to-br from-sky-50 via-white to-blue-50 border-2 border-sky-300 rounded-2xl p-5 shadow-sm relative overflow-hidden group hover:border-[#0088cc] hover:shadow-md transition-all">
-            
-            {/* Telegram watermark icon in corner */}
-            <div className="absolute -right-4 -bottom-4 text-[#0088cc]/10 pointer-events-none group-hover:scale-105 transition-transform">
-              <Send className="w-32 h-32" />
-            </div>
-
-            <div className="relative z-10 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2.5">
-                  <div className="w-10 h-10 rounded-xl bg-[#0088cc] text-white flex items-center justify-center shadow-md shadow-sky-500/25">
-                    <Send className="w-5 h-5 -rotate-12 translate-x-0.5" />
-                  </div>
-                  <div>
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-[#0088cc]">Official Community</div>
-                    <div className="text-base font-extrabold text-gray-900">@quizlauncherssc</div>
-                  </div>
-                </div>
-                <span className="flex items-center space-x-1.5 text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                  <span>Active Channel</span>
-                </span>
-              </div>
-
-              <p className="text-xs text-gray-600 leading-normal">
-                Join our official Telegram community for daily free typing practice passages (PDFs), SSC & RRB quizzes, live typing competitions, and cutoff alerts!
-              </p>
-
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-gray-700 pt-1">
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Daily Typing PDFs</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Live Speed Quizzes</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>NTPC & CGL Updates</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Weak Words Coaching</span>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <a
-                  href="https://t.me/quizlauncherssc"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#0088cc] to-sky-600 hover:from-[#0077b5] hover:to-sky-500 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition transform hover:-translate-y-0.5"
-                >
-                  <Send className="w-4 h-4 -rotate-12" />
-                  <span>Join Telegram Channel (@quizlauncherssc)</span>
-                  <ExternalLink className="w-3.5 h-3.5 ml-1 opacity-80" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Highlights */}
-          <div className="hidden sm:grid grid-cols-2 gap-3 text-xs text-gray-600">
-            <div className="bg-white border border-gray-200 p-3 rounded-xl shadow-2xs flex items-center space-x-2.5">
-              <Landmark className="w-4 h-4 text-blue-600 shrink-0" />
-              <span className="font-medium text-gray-800">SSC CGL Tier-II & CHSL</span>
-            </div>
-            <div className="bg-white border border-gray-200 p-3 rounded-xl shadow-2xs flex items-center space-x-2.5">
-              <Train className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span className="font-medium text-gray-800">RRB NTPC Grad & UG</span>
-            </div>
-          </div>
-
+          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+            SSC & Railway <span className="text-blue-600">Typing Test</span>
+          </h1>
+          <p className="text-xs text-gray-600">
+            TCS iON & Ediquity Exam Simulation • SSC CGL • NTPC
+          </p>
         </div>
 
-        {/* Right Column: Clean White Auth Form Card */}
-        <div className="lg:col-span-7">
-          <div className="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-gray-200/50">
+        {/* 1. AUTH FORM CARD: Shown FIRST on Mobile (order-1), Right Column on Desktop (lg:order-2 lg:col-span-7) */}
+        <div className="w-full order-1 lg:order-2 lg:col-span-7">
+          <div className="bg-white border border-gray-200 rounded-3xl p-5 sm:p-8 shadow-xl shadow-gray-200/50">
             
             {/* Auth Mode Tabs: Sign In / Create Account */}
             <div className="flex p-1 bg-gray-100 rounded-2xl border border-gray-200 mb-6">
@@ -520,6 +438,103 @@ export default function LoginPage({ onLoginSuccess, onContinueAsGuest }) {
             </div>
 
           </div>
+        </div>
+
+        {/* 2. PLATFORM BRANDING & OFFICIAL TELEGRAM COMMUNITY CARD
+            (Shown BELOW login options on Mobile: order-2, Left Column on Desktop: lg:order-1 lg:col-span-5) */}
+        <div className="w-full order-2 lg:order-1 lg:col-span-5 space-y-6">
+          
+          {/* Desktop Only Branding Header (Hidden on mobile since mobile has top compact header) */}
+          <div className="hidden lg:block">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-3 shadow-xs">
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              <span>Official CBT Typing Examination Portal</span>
+            </div>
+            
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              SSC & Railway <span className="text-blue-600">Typing Skill Test</span>
+            </h1>
+            
+            <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
+              Real TCS iON and Ediquity exam simulations for SSC CGL Tier-II (DEST), SSC CHSL, and RRB NTPC Graduate & Under Graduate exams with authentic category cutoff analysis.
+            </p>
+          </div>
+
+          {/* TELEGRAM COMMUNITY CARD (CLEAN VIBRANT SKY THEME) */}
+          <div className="bg-gradient-to-br from-sky-50 via-white to-blue-50 border-2 border-sky-300 rounded-2xl p-4 sm:p-5 shadow-sm relative overflow-hidden group hover:border-[#0088cc] hover:shadow-md transition-all">
+            
+            {/* Telegram watermark icon in corner */}
+            <div className="absolute -right-4 -bottom-4 text-[#0088cc]/10 pointer-events-none group-hover:scale-105 transition-transform">
+              <Send className="w-28 sm:w-32 h-28 sm:h-32" />
+            </div>
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#0088cc] text-white flex items-center justify-center shadow-md shadow-sky-500/25">
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5 -rotate-12 translate-x-0.5" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#0088cc]">Official Community</div>
+                    <div className="text-sm sm:text-base font-extrabold text-gray-900">@quizlauncherssc</div>
+                  </div>
+                </div>
+                <span className="flex items-center space-x-1.5 text-[10px] sm:text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  <span>Active Channel</span>
+                </span>
+              </div>
+
+              <p className="text-xs text-gray-600 leading-normal">
+                Join our official Telegram community for daily free typing practice passages (PDFs), SSC & RRB quizzes, live typing competitions, and cutoff alerts!
+              </p>
+
+              <div className="grid grid-cols-2 gap-2 text-[11px] text-gray-700 pt-1">
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Daily Typing PDFs</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Live Speed Quizzes</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>NTPC & CGL Updates</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Weak Words Coaching</span>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href="https://t.me/quizlauncherssc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#0088cc] to-sky-600 hover:from-[#0077b5] hover:to-sky-500 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition transform hover:-translate-y-0.5"
+                >
+                  <Send className="w-4 h-4 -rotate-12" />
+                  <span>Join Telegram Channel (@quizlauncherssc)</span>
+                  <ExternalLink className="w-3.5 h-3.5 ml-1 opacity-80" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Highlights */}
+          <div className="hidden sm:grid grid-cols-2 gap-3 text-xs text-gray-600">
+            <div className="bg-white border border-gray-200 p-3 rounded-xl shadow-2xs flex items-center space-x-2.5">
+              <Landmark className="w-4 h-4 text-blue-600 shrink-0" />
+              <span className="font-medium text-gray-800">SSC CGL Tier-II & CHSL</span>
+            </div>
+            <div className="bg-white border border-gray-200 p-3 rounded-xl shadow-2xs flex items-center space-x-2.5">
+              <Train className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="font-medium text-gray-800">RRB NTPC Grad & UG</span>
+            </div>
+          </div>
+
         </div>
 
       </div>
