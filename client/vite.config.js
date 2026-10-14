@@ -16,5 +16,18 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {
+    // 1. Obfuscation & Security: Never emit sourcemaps (prevents viewing source code in browser)
+    sourcemap: false,
+    minify: true,
+    cssMinify: true,
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'assets/[hash].js',
+        entryFileNames: 'assets/[hash].js',
+        assetFileNames: 'assets/[hash].[ext]'
+      }
+    }
   }
 })
