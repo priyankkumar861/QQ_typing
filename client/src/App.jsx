@@ -93,9 +93,12 @@ export default function App() {
     else if (mockPassage.category.startsWith('RRB NTPC')) targetExam = 'RRB_NTPC';
     else if (mockPassage.category === 'SSC CHSL') targetExam = 'SSC_CHSL';
 
+    const isNTPCExam = targetExam.startsWith('RRB_NTPC');
+    const finalPattern = isNTPCExam ? 'tcs' : pattern;
+
     handleUpdateCandidateInfo({ ...candidateInfo, examType: targetExam });
     setCurrentPassage(mockPassage);
-    setTestSessionConfig({ mode, pattern });
+    setTestSessionConfig({ mode, pattern: finalPattern });
     setActiveTab('test');
   };
 

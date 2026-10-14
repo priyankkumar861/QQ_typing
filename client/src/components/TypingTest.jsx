@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import LiveDiagnosticsPanel from './LiveDiagnosticsPanel';
 import TcsExamHeader from './TcsExamHeader';
+import TcsRealExamView from './TcsRealExamView';
 
 export default function TypingTest({ 
   passage, 
@@ -40,14 +41,21 @@ export default function TypingTest({
   
   // Assessment Mode: 'practice' (with live sidebar & guidance) vs 'exam' (strict distraction-free CBT)
   const [mode, setMode] = useState(initialMode);
-  // Interface Pattern: 'ediquity' (New green input box & navy bar) vs 'tcs' (Classic TCS iON lab view)
-  const [pattern, setPattern] = useState(initialPattern);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  // Strict Exam-Specific Rules
-  const isNTPC = candidateInfo?.examType === 'RRB_NTPC';
+  
+  // Strict Exam-Specific Rules: In RRB NTPC, exam strictly uses TCS iON pattern only
+  const isNTPC = candidateInfo?.examType === 'RRB_NTPC' || candidateInfo?.examType?.startsWith('RRB_NTPC') || passage?.category?.startsWith('RRB NTPC');
   const isCGL = candidateInfo?.examType === 'SSC_CGL';
   const examDurationMinutes = isCGL ? 15 : 10;
+
+  // Interface Pattern: If NTPC, strictly 'tcs', else initialPattern
+  const [pattern, setPattern] = useState(isNTPC ? 'tcs' : initialPattern);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (isNTPC) {
+      setPattern('tcs');
+    }
+  }, [isNTPC, passage]);
 
   const [testDurationMinutes, setTestDurationMinutes] = useState(examDurationMinutes);
   const [timeLeftSeconds, setTimeLeftSeconds] = useState(examDurationMinutes * 60);
@@ -276,11 +284,82 @@ export default function TypingTest({
 
   const setNumber = (passage?.id || '01').replace(/^[a-z]+-mock-?/i, '') || '01';
 
+  // If TCS iON Pattern is active (always true for RRB NTPC, or selected for SSC):
+  if (pattern === 'tcs') {
+    return (
+      <>
+        <TcsRealExamView
+          passage={passage}
+          candidateInfo={candidateInfo}
+          typedText={typedText}
+          timeLeftFormatted={formatTime(timeLeftSeconds)}
+          timeLeftSeconds={timeLeftSeconds}
+          isTestStarted={isTestStarted}
+          isTestFinished={isTestFinished}
+          fontSizeLevel={fontSizeLevel}
+          increaseFontSize={increaseFontSize}
+          decreaseFontSize={decreaseFontSize}
+          getFontSizeClass={getFontSizeClass}
+          soundEnabled={soundEnabled}
+          setSoundEnabled={setSoundEnabled}
+          isFullscreen={isFullscreen}
+          toggleFullscreen={toggleFullscreen}
+          inputRef={inputRef}
+          passageBoxRef={passageBoxRef}
+          handleInputChange={handleInputChange}
+          handleKeyDown={handleKeyDown}
+          onExitTest={onExitTest}
+          onSubmitTest={() => setShowConfirmModal(true)}
+          isNTPC={isNTPC}
+          totalKeystrokes={totalKeystrokes}
+          backspaceCount={backspaceCount}
+        />
+
+        {/* Submit Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+            <div className="bg-white border border-slate-300 w-full max-w-md rounded-2xl shadow-2xl p-6 text-slate-900 space-y-4 animate-in fade-in">
+              <div className="flex items-center space-x-3 text-red-600">
+                <AlertCircle className="w-6 h-6" />
+                <h3 className="text-lg font-bold">Submit Skill Test?</h3>
+              </div>
+              
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Are you sure you want to finish and submit your test now? Your performance will be audited as per official <strong className="text-blue-700">{candidateInfo.examType.replace('_', ' ')}</strong> guidelines.
+              </p>
+
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1 font-mono">
+                <div>Total Keystrokes: <span className="text-blue-700 font-bold">{totalKeystrokes}</span></div>
+                <div>Time Remaining: <span className="text-red-600 font-bold">{formatTime(timeLeftSeconds)}</span></div>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition"
+                >
+                  Continue Typing
+                </button>
+                <button
+                  disabled={submitting}
+                  onClick={() => finishTest(false)}
+                  className="px-5 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg shadow-md transition"
+                >
+                  {submitting ? 'Auditing...' : 'Yes, Submit Test'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen bg-[#f3f4f6] flex flex-col font-sans select-none pb-12">
       
       {/* ============================================================== */}
-      {/* 1. TOP HEADER: EDIQUITY PATTERN OR TCS iON PATTERN             */}
+      {/* 1. TOP HEADER: EDIQUITY PATTERN                                */}
       {/* ============================================================== */}
       {pattern === 'ediquity' ? (
         <header className="bg-[#2c4e72] text-white px-3 sm:px-4 py-2 border-b-2 border-[#1e3852] shadow-sm select-none">
@@ -382,30 +461,32 @@ export default function TypingTest({
               </div>
 
               {/* Pattern Switcher Pill */}
-              <div className="hidden md:flex items-center bg-[#1e3852] p-0.5 rounded border border-white/20">
-                <button
-                  onClick={() => setPattern('ediquity')}
-                  className={`px-2 py-0.5 rounded text-[11px] font-bold transition ${
-                    pattern === 'ediquity' 
-                      ? 'bg-emerald-600 text-white shadow-xs' 
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                  title="Ediquity Exam Pattern"
-                >
-                  Ediquity
-                </button>
-                <button
-                  onClick={() => setPattern('tcs')}
-                  className={`px-2 py-0.5 rounded text-[11px] font-bold transition ${
-                    pattern === 'tcs' 
-                      ? 'bg-slate-700 text-white shadow-xs' 
-                      : 'text-slate-300 hover:text-white'
-                  }`}
-                  title="TCS iON Exam Pattern"
-                >
-                  TCS iON
-                </button>
-              </div>
+              {!isNTPC && (
+                <div className="hidden md:flex items-center bg-[#1e3852] p-0.5 rounded border border-white/20">
+                  <button
+                    onClick={() => setPattern('ediquity')}
+                    className={`px-2 py-0.5 rounded text-[11px] font-bold transition ${
+                      pattern === 'ediquity' 
+                        ? 'bg-emerald-600 text-white shadow-xs' 
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                    title="Ediquity Exam Pattern"
+                  >
+                    Ediquity
+                  </button>
+                  <button
+                    onClick={() => setPattern('tcs')}
+                    className={`px-2 py-0.5 rounded text-[11px] font-bold transition ${
+                      pattern === 'tcs' 
+                        ? 'bg-slate-700 text-white shadow-xs' 
+                        : 'text-slate-300 hover:text-white'
+                    }`}
+                    title="TCS iON Exam Pattern"
+                  >
+                    TCS iON
+                  </button>
+                </div>
+              )}
 
             </div>
 
@@ -815,23 +896,27 @@ export default function TypingTest({
                 </button>
               </div>
 
-              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block pt-2">
-                Interface Pattern
-              </label>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <button
-                  onClick={() => setPattern('ediquity')}
-                  className={`py-1.5 rounded-lg font-bold transition ${pattern === 'ediquity' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300'}`}
-                >
-                  Ediquity Pattern
-                </button>
-                <button
-                  onClick={() => setPattern('tcs')}
-                  className={`py-1.5 rounded-lg font-bold transition ${pattern === 'tcs' ? 'bg-slate-600 text-white' : 'bg-slate-700 text-slate-300'}`}
-                >
-                  TCS iON Pattern
-                </button>
-              </div>
+              {!isNTPC && (
+                <>
+                  <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block pt-2">
+                    Interface Pattern
+                  </label>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <button
+                      onClick={() => setPattern('ediquity')}
+                      className={`py-1.5 rounded-lg font-bold transition ${pattern === 'ediquity' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300'}`}
+                    >
+                      Ediquity Pattern
+                    </button>
+                    <button
+                      onClick={() => setPattern('tcs')}
+                      className={`py-1.5 rounded-lg font-bold transition ${pattern === 'tcs' ? 'bg-slate-600 text-white' : 'bg-slate-700 text-slate-300'}`}
+                    >
+                      TCS iON Pattern
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Font Family Selector */}

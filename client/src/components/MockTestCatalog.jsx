@@ -52,14 +52,18 @@ export default function MockTestCatalog({
   });
 
   const handleOpenLaunchModal = (mock) => {
+    const isNTPC = mock?.category?.startsWith('RRB NTPC') || candidateInfo?.examType?.startsWith('RRB_NTPC');
     setSelectedMockForLaunch(mock);
     setSelectedMode('practice');
-    setSelectedPattern('ediquity');
+    setSelectedPattern(isNTPC ? 'tcs' : 'ediquity');
   };
 
   const handleConfirmLaunch = () => {
     if (!selectedMockForLaunch) return;
     
+    const isNTPC = selectedMockForLaunch?.category?.startsWith('RRB NTPC') || candidateInfo?.examType?.startsWith('RRB_NTPC');
+    const finalPattern = isNTPC ? 'tcs' : selectedPattern;
+
     // Automatically trigger fullscreen if user selected Real Exam Mode
     if (selectedMode === 'exam') {
       try {
@@ -69,7 +73,7 @@ export default function MockTestCatalog({
       } catch (e) {}
     }
 
-    onStartMock(selectedMockForLaunch, selectedMode, selectedPattern);
+    onStartMock(selectedMockForLaunch, selectedMode, finalPattern);
     setSelectedMockForLaunch(null);
   };
 
@@ -415,77 +419,103 @@ export default function MockTestCatalog({
                 </div>
               </div>
 
-              {/* 2. CHOOSE INTERFACE PATTERN: EDIQUITY PATTERN VS TCS ION PATTERN */}
-              <div>
-                <label className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-2">
-                  2. Select Interface Pattern (इंटरफ़ेस पैटर्न चुनें):
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  
-                  {/* Ediquity Pattern Card */}
-                  <div
-                    onClick={() => setSelectedPattern('ediquity')}
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col justify-between ${
-                      selectedPattern === 'ediquity'
-                        ? 'border-emerald-600 bg-emerald-50/50 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="p-2 rounded-lg bg-emerald-100 text-emerald-800">
-                          <Monitor className="w-4 h-4" />
-                        </div>
-                        {selectedPattern === 'ediquity' && (
-                          <span className="bg-emerald-600 text-white rounded-full p-0.5">
-                            <Check className="w-3.5 h-3.5" />
-                          </span>
-                        )}
+              {/* 2. CHOOSE INTERFACE PATTERN */}
+              {selectedMockForLaunch?.category?.startsWith('RRB NTPC') || candidateInfo?.examType?.startsWith('RRB_NTPC') ? (
+                <div>
+                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-2">
+                    2. Interface Pattern (इंटरफ़ेस पैटर्न):
+                  </label>
+                  <div className="p-4 rounded-xl border-2 border-slate-700 bg-slate-50 flex items-center justify-between shadow-xs">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2.5 rounded-xl bg-slate-800 text-white shadow-xs">
+                        <Layout className="w-5 h-5" />
                       </div>
-                      <div className="font-bold text-sm text-slate-900">Ediquity Pattern</div>
-                      <div className="text-[10px] font-semibold text-emerald-700 mb-1">New Official Pattern</div>
-                      <p className="text-xs text-slate-600 leading-relaxed">
-                        Deep navy header (`#2c4e72`), upper white master box, <strong>light-green input box (`#e4f8d6`)</strong>, and centered submit button.
-                      </p>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-200/60 text-[10px] font-semibold text-emerald-700">
-                      ✓ Matches latest CBT vendor layout
+                      <div>
+                        <div className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                          <span>TCS iON CBT Pattern</span>
+                          <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded font-black uppercase">
+                            Mandatory for RRB NTPC
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                          Official Railway Recruitment Board exam strictly conducts on TCS iON software. Ediquity pattern is not applicable for NTPC.
+                        </p>
+                      </div>
                     </div>
                   </div>
-
-                  {/* TCS iON Pattern Card */}
-                  <div
-                    onClick={() => setSelectedPattern('tcs')}
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col justify-between ${
-                      selectedPattern === 'tcs'
-                        ? 'border-slate-700 bg-slate-100 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="p-2 rounded-lg bg-slate-200 text-slate-800">
-                          <Layout className="w-4 h-4" />
-                        </div>
-                        {selectedPattern === 'tcs' && (
-                          <span className="bg-slate-800 text-white rounded-full p-0.5">
-                            <Check className="w-3.5 h-3.5" />
-                          </span>
-                        )}
-                      </div>
-                      <div className="font-bold text-sm text-slate-900">TCS iON Pattern</div>
-                      <div className="text-[10px] font-semibold text-slate-700 mb-1">Classic Exam Interface</div>
-                      <p className="text-xs text-slate-600 leading-relaxed">
-                        Candidate photo & roll credentials bar, <strong>red digital countdown clock</strong>, and dual scrolling pane.
-                      </p>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-slate-200/60 text-[10px] font-semibold text-slate-700">
-                      ✓ Standard TCS iON test lab format
-                    </div>
-                  </div>
-
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <label className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-2">
+                    2. Select Interface Pattern (इंटरफ़ेस पैटर्न चुनें):
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    
+                    {/* Ediquity Pattern Card */}
+                    <div
+                      onClick={() => setSelectedPattern('ediquity')}
+                      className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col justify-between ${
+                        selectedPattern === 'ediquity'
+                          ? 'border-emerald-600 bg-emerald-50/50 shadow-sm'
+                          : 'border-slate-200 hover:border-slate-300 bg-white'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="p-2 rounded-lg bg-emerald-100 text-emerald-800">
+                            <Monitor className="w-4 h-4" />
+                          </div>
+                          {selectedPattern === 'ediquity' && (
+                            <span className="bg-emerald-600 text-white rounded-full p-0.5">
+                              <Check className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-bold text-sm text-slate-900">Ediquity Pattern</div>
+                        <div className="text-[10px] font-semibold text-emerald-700 mb-1">New Official Pattern</div>
+                        <p className="text-xs text-slate-600 leading-relaxed">
+                          Deep navy header, upper white master box, <strong>light-green input box (`#e4f8d6`)</strong>, and centered submit button.
+                        </p>
+                      </div>
+                      <div className="mt-3 pt-2 border-t border-slate-200/60 text-[10px] font-semibold text-emerald-700">
+                        ✓ Matches latest CBT vendor layout
+                      </div>
+                    </div>
+
+                    {/* TCS iON Pattern Card */}
+                    <div
+                      onClick={() => setSelectedPattern('tcs')}
+                      className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex flex-col justify-between ${
+                        selectedPattern === 'tcs'
+                          ? 'border-slate-700 bg-slate-100 shadow-sm'
+                          : 'border-slate-200 hover:border-slate-300 bg-white'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="p-2 rounded-lg bg-slate-200 text-slate-800">
+                            <Layout className="w-4 h-4" />
+                          </div>
+                          {selectedPattern === 'tcs' && (
+                            <span className="bg-slate-800 text-white rounded-full p-0.5">
+                              <Check className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-bold text-sm text-slate-900">TCS iON Pattern</div>
+                        <div className="text-[10px] font-semibold text-slate-700 mb-1">Classic Exam Interface</div>
+                        <p className="text-xs text-slate-600 leading-relaxed">
+                          Candidate photo & roll credentials bar, <strong>red digital countdown clock</strong>, and dual scrolling pane.
+                        </p>
+                      </div>
+                      <div className="mt-3 pt-2 border-t border-slate-200/60 text-[10px] font-semibold text-slate-700">
+                        ✓ Standard TCS iON test lab format
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              )}
 
             </div>
 
