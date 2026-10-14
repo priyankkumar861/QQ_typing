@@ -44,11 +44,11 @@ export default function Sidebar({
   return (
     <aside 
       className={`
-        bg-white border-r border-gray-200 text-gray-800 flex flex-col justify-between transition-all duration-300 z-30 shrink-0
+        bg-white border-r border-gray-200 text-gray-800 flex flex-col h-full transition-all duration-300 z-30 shrink-0
         ${isOpen ? 'w-64' : 'w-16'}
       `}
     >
-      <div>
+      <div className="shrink-0">
         {/* Sidebar Header & Toggle */}
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           {isOpen ? (
@@ -101,8 +101,70 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Navigation Sections */}
-        <nav className="p-3 space-y-1 text-xs">
+        {/* Top Pinned: Performance Snapshot & Telegram Community (Visible without scrolling) */}
+        {isOpen ? (
+          <div className="px-3 pt-2.5 pb-2 space-y-2 border-b border-gray-100">
+            {/* Performance Stats */}
+            <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-200 text-xs">
+              <div className="flex items-center justify-between text-gray-600">
+                <span className="flex items-center gap-1 font-semibold text-[11px] text-gray-700">
+                  <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Avg Speed</span>
+                </span>
+                <span className="font-mono font-bold text-emerald-600 text-xs">
+                  {avgWPM} WPM
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-gray-500 text-[10px] mt-1">
+                <span>Attempts:</span>
+                <span className="font-mono font-bold text-gray-900">{totalTests}</span>
+              </div>
+            </div>
+
+            {/* Official Telegram Community */}
+            <div className="p-2.5 bg-gradient-to-br from-[#0088cc]/10 to-sky-500/10 border border-[#0088cc]/30 rounded-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-1.5 text-[#0088cc] font-bold text-xs">
+                  <Send className="w-3.5 h-3.5 -rotate-12" />
+                  <span>Telegram Community</span>
+                </div>
+              </div>
+              <div className="text-xs font-black text-gray-900 mt-0.5">@quizlauncherssc</div>
+              <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">
+                Daily Typing PDFs, Quizzes & Exam DEST updates
+              </p>
+              <a
+                href="https://t.me/quizlauncherssc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 w-full flex items-center justify-center space-x-1.5 py-1.5 px-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-[11px] font-bold rounded-xl transition shadow-xs"
+              >
+                <Send className="w-3 h-3 -rotate-12" />
+                <span>Join Telegram</span>
+                <ExternalLink className="w-3 h-3 opacity-80" />
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="py-2 border-b border-gray-100 flex flex-col items-center space-y-2">
+            <span className="text-[10px] font-mono font-bold text-emerald-600" title={`Avg Speed: ${avgWPM} WPM`}>
+              {avgWPM}w
+            </span>
+            <a
+              href="https://t.me/quizlauncherssc"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-[#0088cc] hover:bg-blue-50 rounded-lg transition"
+              title="Join Official Telegram @quizlauncherssc"
+            >
+              <Send className="w-4 h-4 -rotate-12" />
+            </a>
+          </div>
+        )}
+      </div>
+
+      {/* Navigation Sections */}
+      <nav className="p-3 space-y-1 text-xs flex-1 overflow-y-auto">
           
           {isOpen && (
             <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">
@@ -285,66 +347,6 @@ export default function Sidebar({
           </button>
 
         </nav>
-      </div>
-
-      {/* Official Telegram Channel Banner (@quizlauncherssc) */}
-      {isOpen ? (
-        <div className="mx-3 mb-2 p-3 bg-gradient-to-br from-[#0088cc]/10 to-sky-500/10 border border-[#0088cc]/30 rounded-2xl">
-          <div className="flex items-center space-x-2 text-[#0088cc] font-bold text-xs">
-            <Send className="w-3.5 h-3.5 -rotate-12" />
-            <span>Official Community</span>
-          </div>
-          <div className="text-xs font-black text-gray-900 mt-0.5">@quizlauncherssc</div>
-          <p className="text-[10px] text-gray-500 mt-1 leading-tight">
-            Daily Typing PDFs, Quizzes & Exam DEST updates
-          </p>
-          <a
-            href="https://t.me/quizlauncherssc"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 w-full flex items-center justify-center space-x-1.5 py-1.5 px-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-[11px] font-bold rounded-xl transition shadow-xs"
-          >
-            <Send className="w-3 h-3 -rotate-12" />
-            <span>Join Telegram</span>
-            <ExternalLink className="w-3 h-3 opacity-80" />
-          </a>
-        </div>
-      ) : (
-        <a
-          href="https://t.me/quizlauncherssc"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-2.5 mx-auto text-[#0088cc] hover:bg-blue-50 rounded-xl flex items-center justify-center mb-2 transition"
-          title="Join Official Telegram @quizlauncherssc"
-        >
-          <Send className="w-5 h-5 -rotate-12" />
-        </a>
-      )}
-
-      {/* Bottom Performance Snapshot */}
-      {isOpen ? (
-        <div className="p-3 m-3 mt-0 bg-gray-50 rounded-2xl border border-gray-200 text-xs space-y-1.5">
-          <div className="flex items-center justify-between text-gray-600">
-            <span className="flex items-center gap-1 font-semibold text-[11px] text-gray-700">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Avg Speed</span>
-            </span>
-            <span className="font-mono font-bold text-emerald-600 text-xs">
-              {avgWPM} WPM
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between text-gray-500 text-[10px]">
-            <span>Attempts:</span>
-            <span className="font-mono font-bold text-gray-900">{totalTests}</span>
-          </div>
-        </div>
-      ) : (
-        <div className="p-2 text-center border-t border-gray-200">
-          <span className="text-[10px] font-mono font-bold text-emerald-600">{avgWPM}w</span>
-        </div>
-      )}
-
     </aside>
   );
 }
