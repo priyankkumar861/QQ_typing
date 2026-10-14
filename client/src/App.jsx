@@ -269,6 +269,7 @@ export default function App() {
               setCandidateModalOpen={setIsCandidateModalOpen}
               activeFilter={examFilter}
               setActiveFilter={setExamFilter}
+              history={history}
             />
           )}
 

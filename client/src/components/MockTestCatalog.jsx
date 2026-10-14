@@ -17,18 +17,27 @@ import {
   X,
   Sliders,
   Check,
-  ChevronRight
+  ChevronRight,
+  TrendingUp,
+  Send,
+  ExternalLink
 } from 'lucide-react';
 
 export default function MockTestCatalog({ 
   passages, 
   onStartMock, 
   candidateInfo, 
-  setCandidateModalOpen,
-  activeFilter,
-  setActiveFilter
+  setCandidateModalOpen, 
+  activeFilter, 
+  setActiveFilter,
+  history = []
 }) {
   const [selectedLanguage, setSelectedLanguage] = useState('ALL');
+  
+  const totalTests = history?.length || 0;
+  const avgWPM = totalTests > 0 
+    ? Math.round(history.reduce((a, b) => a + (b.netWPM || 0), 0) / totalTests) 
+    : 0;
   
   // Launch Modal State
   const [selectedMockForLaunch, setSelectedMockForLaunch] = useState(null);
@@ -116,6 +125,48 @@ export default function MockTestCatalog({
               Change Category / Profile
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Top Prominent Performance Snapshot & Official Telegram Community Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Performance Snapshot */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-3.5 shadow-2xs flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shrink-0">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Candidate Performance</div>
+              <div className="flex items-center space-x-2">
+                <span className="text-lg font-black text-emerald-600 font-mono">{avgWPM} WPM</span>
+                <span className="text-xs text-gray-400">•</span>
+                <span className="text-xs text-gray-700 font-bold">{totalTests} Attempts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Official Telegram Community (@quizlauncherssc) */}
+        <div className="bg-gradient-to-r from-sky-50 via-white to-blue-50 border border-sky-300 rounded-2xl p-3.5 shadow-2xs flex items-center justify-between">
+          <div className="flex items-center space-x-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-[#0088cc] text-white flex items-center justify-center shadow-xs shrink-0">
+              <Send className="w-5 h-5 -rotate-12" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[10px] font-bold text-[#0088cc] uppercase tracking-wider">Official Telegram</div>
+              <div className="font-extrabold text-sm text-gray-900 truncate">@quizlauncherssc</div>
+            </div>
+          </div>
+          <a
+            href="https://t.me/quizlauncherssc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold rounded-xl transition shadow-xs shrink-0"
+          >
+            <span>Join Telegram</span>
+            <ExternalLink className="w-3 h-3 opacity-80" />
+          </a>
         </div>
       </div>
 
