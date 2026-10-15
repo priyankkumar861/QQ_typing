@@ -38,5 +38,15 @@
     "category": "OBC",
     "examType": "SSC_CGL",
     "createdAt": "2026-10-14T18:15:51.067Z"
+  },
+  {
+    "id": "user-1792043369018",
+    "email": "priyank@quizlauncher.com",
+    "password": "pass123",
+    "name": "Priyank Kumar",
+    "rollNo": "SSC-7457628059",
+    "category": "UR",
+    "examType": "SSC_CGL",
+    "createdAt": "2026-10-15T05:49:29.018Z"
   }
 ]
