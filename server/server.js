@@ -24,11 +24,21 @@ if (process.env.MONGODB_URI) {
     const { MongoClient } = require('mongodb');
     const client = new MongoClient(process.env.MONGODB_URI);
     client.connect()
-      .then(() => {
+      .then(async () => {
         mongoDb = client.db('ssc_typing_portal');
         mongoUsers = mongoDb.collection('users');
         mongoHistory = mongoDb.collection('history');
         console.log('✅ Successfully connected to MongoDB Atlas Cloud Database!');
+        
+        // Auto-sync initial users to MongoDB if empty
+        const count = await mongoUsers.countDocuments();
+        if (count === 0) {
+          const initial = readUsers();
+          if (initial.length > 0) {
+            await mongoUsers.insertMany(initial);
+            console.log(`📦 Seeded ${initial.length} initial users to MongoDB Atlas.`);
+          }
+        }
       })
       .catch(err => {
         console.warn('⚠️ MongoDB Atlas note (falling back to JSON storage):', err.message);
@@ -110,6 +120,76 @@ function writeUsers(data) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(data, null, 2));
 }
 
+// Permanent Cloud + Local Hybrid Storage Helpers
+async function getAllUsers() {
+  if (mongoUsers) {
+    try {
+      const dbUsers = await mongoUsers.find({}).toArray();
+      if (dbUsers && dbUsers.length > 0) return dbUsers;
+    } catch (err) {
+      console.warn('MongoDB read users error:', err.message);
+    }
+  }
+  return readUsers();
+}
+
+async function saveUser(user) {
+  if (mongoUsers) {
+    try {
+      await mongoUsers.updateOne(
+        { email: user.email.toLowerCase() },
+        { $set: user },
+        { upsert: true }
+      );
+    } catch (err) {
+      console.warn('MongoDB save user error:', err.message);
+    }
+  }
+  const users = readUsers();
+  const existingIdx = users.findIndex(u => u.email.toLowerCase() === user.email.toLowerCase());
+  if (existingIdx >= 0) {
+    users[existingIdx] = user;
+  } else {
+    users.push(user);
+  }
+  writeUsers(users);
+}
+
+async function getAllHistory(filter = {}) {
+  if (mongoHistory) {
+    try {
+      const query = {};
+      if (filter.userEmail) query.userEmail = new RegExp(`^${filter.userEmail}$`, 'i');
+      if (filter.rollNo) query.rollNo = filter.rollNo;
+      const dbHistory = await mongoHistory.find(query).sort({ timestamp: -1 }).limit(200).toArray();
+      if (dbHistory && dbHistory.length > 0) return dbHistory;
+    } catch (err) {
+      console.warn('MongoDB read history error:', err.message);
+    }
+  }
+  const history = readHistory();
+  let filtered = history;
+  if (filter.userEmail) {
+    filtered = filtered.filter(h => h.userEmail && h.userEmail.toLowerCase() === filter.userEmail.toLowerCase());
+  } else if (filter.rollNo) {
+    filtered = filtered.filter(h => h.rollNo === filter.rollNo);
+  }
+  return filtered;
+}
+
+async function saveHistoryAttempt(attempt) {
+  if (mongoHistory) {
+    try {
+      await mongoHistory.insertOne({ ...attempt });
+    } catch (err) {
+      console.warn('MongoDB save attempt error:', err.message);
+    }
+  }
+  const history = readHistory();
+  history.unshift(attempt);
+  writeHistory(history.slice(0, 200));
+}
+
 // 1. Get all passages
 app.get('/api/passages', (req, res) => {
   const passages = readPassages();
@@ -162,7 +242,7 @@ app.post('/api/passages', (req, res) => {
 });
 
 // 3.5 Authentication Endpoints (Gmail & Password)
-app.post('/api/auth/register', (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   try {
     const { email, password, name, rollNo, category, examType } = req.body;
     if (!email || !password || !name) {
@@ -170,7 +250,7 @@ app.post('/api/auth/register', (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const users = readUsers();
+    const users = await getAllUsers();
     const existing = users.find(u => u.email.toLowerCase() === cleanEmail);
     if (existing) {
       return res.status(400).json({ success: false, message: 'An account with this Gmail/Email already exists. Please Sign In.' });
@@ -187,8 +267,7 @@ app.post('/api/auth/register', (req, res) => {
       createdAt: new Date().toISOString()
     };
 
-    users.push(newUser);
-    writeUsers(users);
+    await saveUser(newUser);
 
     const { password: _, ...userSafe } = newUser;
     res.status(201).json({ success: true, user: userSafe, message: 'Account registered successfully!' });
@@ -197,7 +276,7 @@ app.post('/api/auth/register', (req, res) => {
   }
 });
 
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -205,7 +284,7 @@ app.post('/api/auth/login', (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const users = readUsers();
+    const users = await getAllUsers();
     const user = users.find(u => u.email.toLowerCase() === cleanEmail);
 
     if (!user || user.password !== password) {
@@ -219,10 +298,10 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
-app.post('/api/auth/demo', (req, res) => {
+app.post('/api/auth/demo', async (req, res) => {
   try {
     const { accountType } = req.body; // 'cgl' or 'ntpc'
-    const users = readUsers();
+    const users = await getAllUsers();
     let targetUser = users.find(u => accountType === 'ntpc' ? u.email.includes('ntpc') : u.email.includes('cgl'));
     if (!targetUser && users.length > 0) targetUser = users[0];
 
@@ -238,7 +317,7 @@ app.post('/api/auth/demo', (req, res) => {
 });
 
 // 4. Official SSC / Railway Evaluation Endpoint
-app.post('/api/evaluate', (req, res) => {
+app.post('/api/evaluate', async (req, res) => {
   try {
     const {
       originalText,
@@ -279,11 +358,8 @@ app.post('/api/evaluate', (req, res) => {
       ...evaluation
     };
 
-    // Save to history
-    const history = readHistory();
-    history.unshift(resultRecord);
-    // Keep last 200
-    writeHistory(history.slice(0, 200));
+    // Save to history (cloud + local)
+    await saveHistoryAttempt(resultRecord);
 
     res.json({ success: true, result: resultRecord });
   } catch (err) {
@@ -293,18 +369,14 @@ app.post('/api/evaluate', (req, res) => {
 });
 
 // 5. Get History (Filtered by user email or roll number if logged in)
-app.get('/api/history', (req, res) => {
-  const history = readHistory();
-  const { email, rollNo } = req.query;
-  let filtered = history;
-
-  if (email) {
-    filtered = filtered.filter(h => h.userEmail && h.userEmail.toLowerCase() === email.trim().toLowerCase());
-  } else if (rollNo) {
-    filtered = filtered.filter(h => h.rollNo === rollNo.trim());
+app.get('/api/history', async (req, res) => {
+  try {
+    const { email, rollNo } = req.query;
+    const history = await getAllHistory({ userEmail: email, rollNo });
+    res.json({ success: true, history });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to fetch history', error: err.message });
   }
-
-  res.json({ success: true, history: filtered });
 });
 
 // 6. Reset History (Per user or global)
@@ -321,10 +393,10 @@ app.delete('/api/history', (req, res) => {
 });
 
 // 6.5 Admin Student Analytics (See all students, logins, and test usage)
-app.get('/api/admin/analytics', (req, res) => {
+app.get('/api/admin/analytics', async (req, res) => {
   try {
-    const users = readUsers();
-    const history = readHistory();
+    const users = await getAllUsers();
+    const history = await getAllHistory({});
 
     const totalStudents = users.length;
     const totalTestsTaken = history.length;
