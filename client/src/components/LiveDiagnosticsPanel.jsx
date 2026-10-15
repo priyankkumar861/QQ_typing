@@ -23,8 +23,10 @@ export default function LiveDiagnosticsPanel({
   setFontSize,
   fontFamily,
   setFontFamily,
-  soundEnabled,
-  setSoundEnabled,
+  keyboardSoundEnabled,
+  setKeyboardSoundEnabled,
+  hallNoiseEnabled,
+  setHallNoiseEnabled,
   onCollapse
 }) {
   const isNTPC = examType === 'RRB_NTPC';
@@ -194,23 +196,40 @@ export default function LiveDiagnosticsPanel({
           </div>
         </div>
 
-        {/* Audio Toggle */}
-        <button
-          onClick={() => setSoundEnabled(!soundEnabled)}
-          className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg border text-xs font-semibold transition ${
-            soundEnabled
-              ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
-              : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <span className="flex items-center gap-1.5">
-            {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-            <span>Mechanical Click Feedback</span>
-          </span>
-          <span className="font-mono text-[10px] font-bold">
-            {soundEnabled ? 'ON' : 'OFF'}
-          </span>
-        </button>
+        {/* Audio Toggles: Keyboard Click & Hall Noise */}
+        <div className="space-y-1.5 pt-1">
+          <button
+            onClick={() => setKeyboardSoundEnabled(!keyboardSoundEnabled)}
+            className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg border text-xs font-semibold transition ${
+              keyboardSoundEnabled
+                ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <span className="flex items-center gap-1.5">
+              <span>⌨️ Key Click Noise</span>
+            </span>
+            <span className="font-mono text-[10px] font-bold">
+              {keyboardSoundEnabled ? 'ON' : 'OFF'}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setHallNoiseEnabled(!hallNoiseEnabled)}
+            className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg border text-xs font-semibold transition ${
+              hallNoiseEnabled
+                ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <span className="flex items-center gap-1.5">
+              <span>🎧 Exam Hall Noise (TCS)</span>
+            </span>
+            <span className="font-mono text-[10px] font-bold">
+              {hallNoiseEnabled ? 'ON' : 'OFF'}
+            </span>
+          </button>
+        </div>
 
       </div>
 

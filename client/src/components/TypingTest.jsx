@@ -26,6 +26,12 @@ import {
 import LiveDiagnosticsPanel from './LiveDiagnosticsPanel';
 import TcsExamHeader from './TcsExamHeader';
 import TcsRealExamView from './TcsRealExamView';
+import { 
+  playKeyboardClick, 
+  startHallAmbientNoise, 
+  stopHallAmbientNoise, 
+  setHallNoiseVolume 
+} from '../utils/audioEngine';
 
 export default function TypingTest({ 
   passage, 
@@ -66,7 +72,51 @@ export default function TypingTest({
   const [totalKeystrokes, setTotalKeystrokes] = useState(0);
 
   // Display Customization (Ediquity Pattern)
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [keyboardSoundEnabled, setKeyboardSoundEnabled] = useState(() => {
+    return localStorage.getItem('typing_key_sound') !== 'false';
+  });
+  const [hallNoiseEnabled, setHallNoiseEnabled] = useState(() => {
+    return localStorage.getItem('typing_hall_noise') === 'true';
+  });
+  const [keyboardVolume, setKeyboardVolume] = useState(() => {
+    const saved = localStorage.getItem('typing_key_vol');
+    return saved ? parseFloat(saved) : 0.6;
+  });
+  const [hallVolume, setHallVolume] = useState(() => {
+    const saved = localStorage.getItem('typing_hall_vol');
+    return saved ? parseFloat(saved) : 0.45;
+  });
+
+  // Persist sound preferences in localStorage
+  useEffect(() => {
+    localStorage.setItem('typing_key_sound', keyboardSoundEnabled);
+  }, [keyboardSoundEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('typing_hall_noise', hallNoiseEnabled);
+  }, [hallNoiseEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('typing_key_vol', keyboardVolume);
+  }, [keyboardVolume]);
+
+  useEffect(() => {
+    localStorage.setItem('typing_hall_vol', hallVolume);
+    setHallNoiseVolume(hallVolume);
+  }, [hallVolume]);
+
+  // Hall Ambient Noise Controller
+  useEffect(() => {
+    if (hallNoiseEnabled && !isTestFinished) {
+      startHallAmbientNoise(hallVolume);
+    } else {
+      stopHallAmbientNoise();
+    }
+    return () => {
+      stopHallAmbientNoise();
+    };
+  }, [hallNoiseEnabled, isTestFinished, hallVolume]);
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSizeLevel, setFontSizeLevel] = useState(2); // 1: small, 2: medium, 3: large, 4: extra large
   const [fontFamily, setFontFamily] = useState('serif'); // 'serif' by default matching Ediquity image
@@ -100,22 +150,10 @@ export default function TypingTest({
     resetTest(duration);
   }, [passage, candidateInfo.examType]);
 
-  // Audio click synthesizer
+  // Authentic Mechanical Keyboard Click Synthesizer
   const playKeySound = () => {
-    if (!soundEnabled) return;
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(320 + Math.random() * 80, ctx.currentTime);
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.05);
-    } catch (e) {}
+    if (!keyboardSoundEnabled) return;
+    playKeyboardClick(keyboardVolume);
   };
 
   // Timer Countdown Effect
@@ -300,8 +338,14 @@ export default function TypingTest({
           increaseFontSize={increaseFontSize}
           decreaseFontSize={decreaseFontSize}
           getFontSizeClass={getFontSizeClass}
-          soundEnabled={soundEnabled}
-          setSoundEnabled={setSoundEnabled}
+          keyboardSoundEnabled={keyboardSoundEnabled}
+          setKeyboardSoundEnabled={setKeyboardSoundEnabled}
+          hallNoiseEnabled={hallNoiseEnabled}
+          setHallNoiseEnabled={setHallNoiseEnabled}
+          keyboardVolume={keyboardVolume}
+          setKeyboardVolume={setKeyboardVolume}
+          hallVolume={hallVolume}
+          setHallVolume={setHallVolume}
           isFullscreen={isFullscreen}
           toggleFullscreen={toggleFullscreen}
           inputRef={inputRef}
@@ -396,18 +440,30 @@ export default function TypingTest({
                 - A-
               </button>
 
-              {/* Sound Toggle (Red/Green button) */}
+              {/* Keyboard Typing Noise Toggle */}
               <button
-                onClick={() => setSoundEnabled(!soundEnabled)}
+                onClick={() => setKeyboardSoundEnabled(!keyboardSoundEnabled)}
                 className={`flex items-center space-x-1 px-2.5 py-1 rounded font-bold transition shadow-2xs ${
-                  soundEnabled 
+                  keyboardSoundEnabled 
                     ? 'bg-emerald-600 hover:bg-emerald-500 text-white' 
                     : 'bg-[#e53e3e] hover:bg-red-600 text-white'
                 }`}
-                title="Toggle Typing Sound"
+                title="Toggle Mechanical Keyboard Typing Noise"
               >
-                {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-                <span>Sound: {soundEnabled ? 'ON' : 'OFF'}</span>
+                <span>⌨️ Key: {keyboardSoundEnabled ? 'ON' : 'OFF'}</span>
+              </button>
+
+              {/* Exam Hall Ambient Noise Toggle */}
+              <button
+                onClick={() => setHallNoiseEnabled(!hallNoiseEnabled)}
+                className={`flex items-center space-x-1 px-2.5 py-1 rounded font-bold transition shadow-2xs ${
+                  hallNoiseEnabled 
+                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white' 
+                    : 'bg-[#e53e3e] hover:bg-red-600 text-white'
+                }`}
+                title="Toggle Examination Hall Ambient Typing Clatter (TCS iON Simulation)"
+              >
+                <span>🎧 Hall Noise: {hallNoiseEnabled ? 'ON' : 'OFF'}</span>
               </button>
 
               {/* Settings Button */}
@@ -852,8 +908,10 @@ export default function TypingTest({
                 setFontSize={(s) => setFontSizeLevel(s === 'small' ? 1 : (s === 'large' ? 3 : 2))}
                 fontFamily={fontFamily}
                 setFontFamily={setFontFamily}
-                soundEnabled={soundEnabled}
-                setSoundEnabled={setSoundEnabled}
+                keyboardSoundEnabled={keyboardSoundEnabled}
+                setKeyboardSoundEnabled={setKeyboardSoundEnabled}
+                hallNoiseEnabled={hallNoiseEnabled}
+                setHallNoiseEnabled={setHallNoiseEnabled}
                 onCollapse={() => setSidebarCollapsed(true)}
               />
             </div>
@@ -946,6 +1004,47 @@ export default function TypingTest({
               </div>
             </div>
 
+            {/* Audio Engine Sliders inside Drawer */}
+            <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-3">
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block">
+                Audio Volume Controls
+              </label>
+
+              {/* Keyboard Volume */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs text-slate-300">
+                  <span>⌨️ Keyboard Volume</span>
+                  <span className="font-mono text-cyan-400 font-bold">{Math.round(keyboardVolume * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="1"
+                  step="0.05"
+                  value={keyboardVolume}
+                  onChange={(e) => setKeyboardVolume(parseFloat(e.target.value))}
+                  className="w-full accent-cyan-400 h-1.5 bg-slate-700 rounded-lg cursor-pointer"
+                />
+              </div>
+
+              {/* Hall Ambient Volume */}
+              <div className="space-y-1 pt-1">
+                <div className="flex justify-between text-xs text-slate-300">
+                  <span>🎧 Exam Hall Volume</span>
+                  <span className="font-mono text-cyan-400 font-bold">{Math.round(hallVolume * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="1"
+                  step="0.05"
+                  value={hallVolume}
+                  onChange={(e) => setHallVolume(parseFloat(e.target.value))}
+                  className="w-full accent-cyan-400 h-1.5 bg-slate-700 rounded-lg cursor-pointer"
+                />
+              </div>
+            </div>
+
             {/* Embedded Live Telemetry inside drawer */}
             <LiveDiagnosticsPanel
               examType={candidateInfo?.examType}
@@ -958,8 +1057,10 @@ export default function TypingTest({
               setFontSize={(s) => setFontSizeLevel(s === 'small' ? 1 : (s === 'large' ? 3 : 2))}
               fontFamily={fontFamily}
               setFontFamily={setFontFamily}
-              soundEnabled={soundEnabled}
-              setSoundEnabled={setSoundEnabled}
+              keyboardSoundEnabled={keyboardSoundEnabled}
+              setKeyboardSoundEnabled={setKeyboardSoundEnabled}
+              hallNoiseEnabled={hallNoiseEnabled}
+              setHallNoiseEnabled={setHallNoiseEnabled}
               onCollapse={() => setShowSettingsDrawer(false)}
             />
 

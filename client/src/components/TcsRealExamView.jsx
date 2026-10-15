@@ -13,8 +13,14 @@ export default function TcsRealExamView({
   increaseFontSize,
   decreaseFontSize,
   getFontSizeClass,
-  soundEnabled,
-  setSoundEnabled,
+  keyboardSoundEnabled,
+  setKeyboardSoundEnabled,
+  hallNoiseEnabled,
+  setHallNoiseEnabled,
+  keyboardVolume = 0.6,
+  setKeyboardVolume,
+  hallVolume = 0.5,
+  setHallVolume,
   isFullscreen,
   toggleFullscreen,
   inputRef,
@@ -78,17 +84,30 @@ export default function TcsRealExamView({
             A+
           </button>
 
-          {/* Sound Toggle (Red when OFF, Green when ON) */}
+          {/* Keyboard Noise Toggle (Red when OFF, Green when ON) */}
           <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            className={`font-semibold px-3 py-1 rounded transition text-xs ${
-              soundEnabled 
+            onClick={() => setKeyboardSoundEnabled(!keyboardSoundEnabled)}
+            className={`font-semibold px-2.5 sm:px-3 py-1 rounded transition text-xs flex items-center space-x-1 ${
+              keyboardSoundEnabled 
                 ? 'bg-[#28a745] hover:bg-[#218838] text-white' 
                 : 'bg-[#d9534f] hover:bg-[#c9302c] text-white'
             }`}
-            title="Toggle Typing Keystroke Sound"
+            title="Toggle Mechanical Keyboard Click Noise"
           >
-            Sound: {soundEnabled ? 'ON' : 'OFF'}
+            <span>⌨️ Key: {keyboardSoundEnabled ? 'ON' : 'OFF'}</span>
+          </button>
+
+          {/* Exam Hall Ambient Noise Toggle (Red when OFF, Green when ON) */}
+          <button
+            onClick={() => setHallNoiseEnabled(!hallNoiseEnabled)}
+            className={`font-semibold px-2.5 sm:px-3 py-1 rounded transition text-xs flex items-center space-x-1 ${
+              hallNoiseEnabled 
+                ? 'bg-[#28a745] hover:bg-[#218838] text-white' 
+                : 'bg-[#d9534f] hover:bg-[#c9302c] text-white'
+            }`}
+            title="Toggle TCS iON Examination Hall Ambient Clatter Noise"
+          >
+            <span>🎧 Hall Noise: {hallNoiseEnabled ? 'ON' : 'OFF'}</span>
           </button>
 
           {/* Settings Button (Teal) */}
@@ -400,19 +419,81 @@ export default function TcsRealExamView({
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-gray-200 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-gray-900">Typing Sound</div>
-                  <div className="text-[11px] text-gray-500">Audio feedback on keystroke</div>
+              {/* Keyboard Sound Toggle & Volume */}
+              <div className="pt-3 border-t border-gray-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-gray-900 flex items-center gap-1.5">
+                      <span>⌨️ Keyboard Typing Noise</span>
+                    </div>
+                    <div className="text-[11px] text-gray-500">Mechanical keypress audio feedback</div>
+                  </div>
+                  <button
+                    onClick={() => setKeyboardSoundEnabled(!keyboardSoundEnabled)}
+                    className={`px-3 py-1 rounded text-xs font-bold transition ${
+                      keyboardSoundEnabled ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'
+                    }`}
+                  >
+                    {keyboardSoundEnabled ? 'Key: ON' : 'Key: OFF'}
+                  </button>
                 </div>
-                <button
-                  onClick={() => setSoundEnabled(!soundEnabled)}
-                  className={`px-3 py-1.5 rounded text-xs font-bold ${
-                    soundEnabled ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'
-                  }`}
-                >
-                  {soundEnabled ? 'Sound: ON' : 'Sound: OFF'}
-                </button>
+                {keyboardSoundEnabled && setKeyboardVolume && (
+                  <div className="flex items-center space-x-2 pt-1">
+                    <span className="text-[10px] text-gray-500 w-12">Volume:</span>
+                    <input
+                      type="range"
+                      min="0.1"
+                      max="1"
+                      step="0.05"
+                      value={keyboardVolume}
+                      onChange={(e) => setKeyboardVolume(parseFloat(e.target.value))}
+                      className="flex-1 accent-emerald-600 h-1.5 bg-gray-200 rounded-lg cursor-pointer"
+                    />
+                    <span className="font-mono text-[10px] text-gray-700 font-bold w-8 text-right">
+                      {Math.round(keyboardVolume * 100)}%
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Exam Hall Ambient Noise Toggle & Volume */}
+              <div className="pt-3 border-t border-gray-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-gray-900 flex items-center gap-1.5">
+                      <span>🎧 Exam Hall Noise (TCS iON Simulation)</span>
+                    </div>
+                    <div className="text-[11px] text-gray-500">Ambient clatter of 100+ candidates typing</div>
+                  </div>
+                  <button
+                    onClick={() => setHallNoiseEnabled(!hallNoiseEnabled)}
+                    className={`px-3 py-1 rounded text-xs font-bold transition ${
+                      hallNoiseEnabled ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white'
+                    }`}
+                  >
+                    {hallNoiseEnabled ? 'Hall: ON' : 'Hall: OFF'}
+                  </button>
+                </div>
+                {hallNoiseEnabled && setHallVolume && (
+                  <div className="flex items-center space-x-2 pt-1">
+                    <span className="text-[10px] text-gray-500 w-12">Volume:</span>
+                    <input
+                      type="range"
+                      min="0.1"
+                      max="1"
+                      step="0.05"
+                      value={hallVolume}
+                      onChange={(e) => setHallVolume(parseFloat(e.target.value))}
+                      className="flex-1 accent-emerald-600 h-1.5 bg-gray-200 rounded-lg cursor-pointer"
+                    />
+                    <span className="font-mono text-[10px] text-gray-700 font-bold w-8 text-right">
+                      {Math.round(hallVolume * 100)}%
+                    </span>
+                  </div>
+                )}
+                <div className="bg-amber-50 p-2 rounded text-[10px] text-amber-800 border border-amber-200 leading-tight">
+                  💡 <strong>Exam Tip:</strong> Real TCS iON centers are noisy with hundreds of keyboards clattering. Practicing with Hall Noise builds focus and eliminates exam-day panic.
+                </div>
               </div>
             </div>
 
