@@ -21,8 +21,16 @@ let mongoHistory = null;
 
 if (process.env.MONGODB_URI) {
   try {
+    let connectionUri = process.env.MONGODB_URI.trim();
+    // Auto-encode special characters like '@' in MongoDB user password if raw
+    const match = connectionUri.match(/^(mongodb(?:\+srv)?:\/\/)([^:]+):(.+)@([^@]+)$/);
+    if (match) {
+      const [, proto, user, pass, host] = match;
+      connectionUri = `${proto}${user}:${encodeURIComponent(decodeURIComponent(pass))}@${host}`;
+    }
+
     const { MongoClient } = require('mongodb');
-    const client = new MongoClient(process.env.MONGODB_URI);
+    const client = new MongoClient(connectionUri);
     client.connect()
       .then(async () => {
         mongoDb = client.db('ssc_typing_portal');
@@ -44,7 +52,7 @@ if (process.env.MONGODB_URI) {
         console.warn('⚠️ MongoDB Atlas note (falling back to JSON storage):', err.message);
       });
   } catch (e) {
-    console.warn('MongoDB package not loaded, using local storage.');
+    console.warn('⚠️ MongoDB initialization note (falling back to JSON storage):', e.message);
   }
 }
 
