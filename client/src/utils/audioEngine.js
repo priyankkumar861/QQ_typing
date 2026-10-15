@@ -1,13 +1,18 @@
-// Exam Simulation Audio Engine for SSC & Railway Typing Platform
-// Generates authentic mechanical keyboard clicks and realistic TCS iON Exam Hall typing crowd ambient noise
+// Real Exam Simulation Audio Engine for SSC & Railway Typing Platform
+// Plays authentic recorded typing exam hall audio (100+ candidates typing simultaneously in exam lab)
+// and real mechanical keypress click audio.
+
+let hallAudio1 = null;
+let hallAudio2 = null;
+let isHallPlaying = false;
+let currentHallVolume = 0.7;
 
 let audioCtx = null;
-let hallGainNode = null;
-let hallInterval = null;
-let isHallPlaying = false;
+let keyAudioBuffers = [];
+let isBuffersLoading = false;
 
 function getAudioContext() {
-  if (!audioCtx) {
+  if (!audioCtx && typeof window !== 'undefined') {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (AudioContextClass) {
       audioCtx = new AudioContextClass();
@@ -19,198 +24,140 @@ function getAudioContext() {
   return audioCtx;
 }
 
-/**
- * 1. Play Authentic Mechanical Keyboard Click
- * Dual-layer synthesis: Sharp mechanical switch snap + bottom-out clack
- */
-export function playKeyboardClick(volume = 0.5) {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
+// Preload key click audio buffers for 0ms latency tactile feedback
+function preloadKeyBuffers() {
+  if (isBuffersLoading || keyAudioBuffers.length > 0 || typeof window === 'undefined') return;
+  isBuffersLoading = true;
+  const ctx = getAudioContext();
+  if (!ctx) return;
 
-    const now = ctx.currentTime;
-    const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(Math.max(0.01, Math.min(volume, 1)) * 0.4, now);
-    masterGain.connect(ctx.destination);
+  const keyFiles = ['/sounds/key_click_1.mp3', '/sounds/key_click_2.mp3', '/sounds/key_click_3.mp3'];
+  keyFiles.forEach((file) => {
+    fetch(file)
+      .then((res) => res.arrayBuffer())
+      .then((buf) => ctx.decodeAudioData(buf))
+      .then((decoded) => {
+        keyAudioBuffers.push(decoded);
+      })
+      .catch(() => {});
+  });
+}
 
-    // Layer A: Crisp mechanical click transient (High frequency snap)
-    const snapOsc = ctx.createOscillator();
-    const snapGain = ctx.createGain();
-    snapOsc.type = 'triangle';
-    // Randomize pitch slightly for natural feel (380Hz - 480Hz)
-    const baseFreq = 420 + (Math.random() * 80 - 40);
-    snapOsc.frequency.setValueAtTime(baseFreq * 2.2, now);
-    snapOsc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, now + 0.035);
-
-    snapGain.gain.setValueAtTime(0.8, now);
-    snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
-    snapOsc.connect(snapGain);
-    snapGain.connect(masterGain);
-
-    snapOsc.start(now);
-    snapOsc.stop(now + 0.04);
-
-    // Layer B: Bottom-out thud (Body resonance of keycap hitting plate)
-    const thudOsc = ctx.createOscillator();
-    const thudGain = ctx.createGain();
-    thudOsc.type = 'sine';
-    thudOsc.frequency.setValueAtTime(180 + (Math.random() * 30), now);
-    thudOsc.frequency.exponentialRampToValueAtTime(90, now + 0.05);
-
-    thudGain.gain.setValueAtTime(0.9, now);
-    thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-    thudOsc.connect(thudGain);
-    thudGain.connect(masterGain);
-
-    thudOsc.start(now);
-    thudOsc.stop(now + 0.055);
-
-    // Layer C: Subtle plastic friction noise burst (White noise puff)
-    const bufferSize = ctx.sampleRate * 0.015; // 15ms buffer
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * 0.3;
-    }
-
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 2400;
-    filter.Q.value = 1.2;
-
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.5, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.015);
-
-    noise.connect(filter);
-    filter.connect(noiseGain);
-    noiseGain.connect(masterGain);
-
-    noise.start(now);
-  } catch (err) {
-    // Audio contexts can be blocked until first user interaction
+// Initialize Hall Audio Elements
+function initHallAudio() {
+  if (typeof window === 'undefined') return;
+  if (!hallAudio1) {
+    hallAudio1 = new Audio('/sounds/hall_typing_1.mp3');
+    hallAudio1.loop = true;
+    hallAudio1.preload = 'auto';
+  }
+  if (!hallAudio2) {
+    hallAudio2 = new Audio('/sounds/hall_typing_2.mp3');
+    hallAudio2.loop = true;
+    hallAudio2.preload = 'auto';
   }
 }
 
 /**
- * 2. Exam Hall Ambient Typing Clatter Simulation
- * Recreates the authentic atmosphere of TCS iON / SSC Examination Lab
- * where 100+ candidates type together with room reverberation and chaotic clatter
+ * 1. Play Real Keyboard Click Sound on Keystroke
  */
-export function startHallAmbientNoise(volume = 0.5) {
+export function playKeyboardClick(volume = 0.6) {
   try {
     const ctx = getAudioContext();
-    if (!ctx) return;
+    preloadKeyBuffers();
 
-    if (isHallPlaying) {
-      if (hallGainNode) {
-        hallGainNode.gain.setTargetAtTime(Math.max(0.01, Math.min(volume, 1)) * 0.35, ctx.currentTime, 0.1);
-      }
+    if (ctx && keyAudioBuffers.length > 0) {
+      const randomBuf = keyAudioBuffers[Math.floor(Math.random() * keyAudioBuffers.length)];
+      const source = ctx.createBufferSource();
+      const gainNode = ctx.createGain();
+
+      source.buffer = randomBuf;
+      // Slight pitch variation (0.94 - 1.06) for organic mechanical switch feel
+      source.playbackRate.value = 0.94 + Math.random() * 0.12;
+
+      const safeVol = Math.max(0.1, Math.min(volume, 1));
+      gainNode.gain.setValueAtTime(safeVol * 0.9, ctx.currentTime);
+
+      source.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      source.start(0);
       return;
     }
 
-    isHallPlaying = true;
+    // Fallback crisp mechanical click synthesis if buffer is still loading
+    if (ctx) {
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(450 + Math.random() * 80, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.04);
+      gain.gain.setValueAtTime(volume * 0.5, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.045);
+    }
+  } catch (e) {}
+}
 
-    // Master Hall Gain
-    hallGainNode = ctx.createGain();
-    hallGainNode.gain.setValueAtTime(0.001, ctx.currentTime);
-    hallGainNode.gain.exponentialRampToValueAtTime(Math.max(0.01, Math.min(volume, 1)) * 0.35, ctx.currentTime + 0.5);
-    hallGainNode.connect(ctx.destination);
+/**
+ * 2. Play REAL Authentic Examination Hall Typing Storm
+ * 100+ candidates typing simultaneously with real clatter
+ */
+export function startHallAmbientNoise(volume = 0.7) {
+  try {
+    initHallAudio();
+    currentHallVolume = Math.max(0.05, Math.min(volume, 1));
 
-    // Sub-layer 1: Room AC / Ambient Low Hum
-    const humOsc = ctx.createOscillator();
-    const humGain = ctx.createGain();
-    humOsc.type = 'sine';
-    humOsc.frequency.setValueAtTime(80, ctx.currentTime);
-    humGain.gain.setValueAtTime(0.04, ctx.currentTime);
-    humOsc.connect(humGain);
-    humGain.connect(hallGainNode);
-    humOsc.start();
+    if (hallAudio1 && hallAudio2) {
+      hallAudio1.volume = currentHallVolume;
+      hallAudio2.volume = currentHallVolume * 0.85;
 
-    // Sub-layer 2: Periodic multi-typist clatter burst
-    // Simulates 15-25 distant candidates typing in ripples
-    const playDistantKeystroke = () => {
-      if (!isHallPlaying || !hallGainNode) return;
-      try {
-        const t = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-
-        osc.type = Math.random() > 0.4 ? 'triangle' : 'sine';
-        // Distant keystroke frequencies with room muffling (250Hz - 900Hz)
-        osc.frequency.setValueAtTime(300 + Math.random() * 550, t);
-        osc.frequency.exponentialRampToValueAtTime(150, t + 0.03);
-
-        const clickVol = 0.05 + Math.random() * 0.12;
-        g.gain.setValueAtTime(clickVol, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.025 + Math.random() * 0.015);
-
-        if (panner) {
-          // Pan randomly across stereo field (-0.9 left to +0.9 right)
-          panner.pan.setValueAtTime((Math.random() * 1.8) - 0.9, t);
-          osc.connect(g);
-          g.connect(panner);
-          panner.connect(hallGainNode);
-        } else {
-          osc.connect(g);
-          g.connect(hallGainNode);
-        }
-
-        osc.start(t);
-        osc.stop(t + 0.045);
-      } catch (e) {}
-    };
-
-    // Schedule chaotic typing bursts mimicking a 100-person hall
-    const triggerHallBursts = () => {
-      if (!isHallPlaying) return;
-      // Burst between 3 to 7 keystrokes in quick succession
-      const count = 3 + Math.floor(Math.random() * 5);
-      for (let i = 0; i < count; i++) {
-        setTimeout(playDistantKeystroke, Math.random() * 80);
+      const p1 = hallAudio1.play();
+      if (p1 && p1.catch) {
+        p1.catch((err) => console.log('Autoplay audio wait:', err.message));
       }
-      // Next burst interval (dense exam hall rhythm)
-      const nextDelay = 35 + Math.random() * 65;
-      hallInterval = setTimeout(triggerHallBursts, nextDelay);
-    };
 
-    triggerHallBursts();
+      // Stagger second audio by 3.5 seconds for continuous overlapping crowd clatter
+      setTimeout(() => {
+        if (isHallPlaying && hallAudio2) {
+          hallAudio2.currentTime = 3.5;
+          const p2 = hallAudio2.play();
+          if (p2 && p2.catch) p2.catch(() => {});
+        }
+      }, 500);
+
+      isHallPlaying = true;
+    }
   } catch (err) {
-    console.warn('Could not start Hall Ambient sound:', err);
+    console.warn('Could not play Hall audio:', err);
   }
 }
 
 export function stopHallAmbientNoise() {
   isHallPlaying = false;
-  if (hallInterval) {
-    clearTimeout(hallInterval);
-    hallInterval = null;
-  }
-  if (hallGainNode && audioCtx) {
-    try {
-      hallGainNode.gain.setTargetAtTime(0.001, audioCtx.currentTime, 0.15);
-      setTimeout(() => {
-        if (!isHallPlaying && hallGainNode) {
-          try {
-            hallGainNode.disconnect();
-          } catch (e) {}
-          hallGainNode = null;
-        }
-      }, 200);
-    } catch (e) {
-      hallGainNode = null;
+  try {
+    if (hallAudio1) {
+      hallAudio1.pause();
+      hallAudio1.currentTime = 0;
     }
-  }
+    if (hallAudio2) {
+      hallAudio2.pause();
+      hallAudio2.currentTime = 0;
+    }
+  } catch (e) {}
 }
 
 export function setHallNoiseVolume(volume) {
-  if (hallGainNode && audioCtx && isHallPlaying) {
-    try {
-      hallGainNode.gain.setTargetAtTime(Math.max(0.01, Math.min(volume, 1)) * 0.35, audioCtx.currentTime, 0.1);
-    } catch (e) {}
-  }
+  currentHallVolume = Math.max(0.05, Math.min(volume, 1));
+  try {
+    if (hallAudio1) {
+      hallAudio1.volume = currentHallVolume;
+    }
+    if (hallAudio2) {
+      hallAudio2.volume = currentHallVolume * 0.85;
+    }
+  } catch (e) {}
 }
