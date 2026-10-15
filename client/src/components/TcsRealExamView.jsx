@@ -45,9 +45,9 @@ export default function TcsRealExamView({
     <div className="w-full min-h-screen bg-white text-gray-900 flex flex-col font-sans select-none overflow-x-hidden">
       
       {/* ============================================================== */}
-      {/* 1. TOP CHARCOAL HEADER BAR (#2b3035)                            */}
+      {/* 1. TOP CHARCOAL HEADER BAR (#2b3035 - ALWAYS STICKY AT TOP)    */}
       {/* ============================================================== */}
-      <header className="bg-[#2b3035] text-white px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 border-b border-[#1f2327] shrink-0">
+      <header className="sticky top-0 z-40 bg-[#2b3035] text-white px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 border-b border-[#1f2327] shrink-0 shadow-md">
         
         {/* Left: Back Button & Mock Test Title */}
         <div className="flex items-center space-x-3">

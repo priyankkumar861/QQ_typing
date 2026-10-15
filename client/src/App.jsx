@@ -227,17 +227,19 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900 selection:bg-blue-600 selection:text-white">
       
-      {/* Top Navbar with Telegram and Auth Controls */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={handleTabChange}
-        candidateInfo={candidateInfo}
-        setCandidateModalOpen={setIsCandidateModalOpen}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        currentUser={currentUser}
-        onLogout={handleLogout}
-      />
+      {/* Top Navbar with Telegram and Auth Controls - Hidden in Test Mode so authentic exam controls are 100% visible */}
+      {activeTab !== 'test' && (
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+          candidateInfo={candidateInfo}
+          setCandidateModalOpen={setIsCandidateModalOpen}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          currentUser={currentUser}
+          onLogout={handleLogout}
+        />
+      )}
 
       {/* Main Container */}
       <div className="flex-1 flex overflow-hidden">

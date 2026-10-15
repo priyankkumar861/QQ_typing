@@ -194,7 +194,7 @@ export default function TypingTest({
     setTotalKeystrokes(0);
     setShowConfirmModal(false);
     if (inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus({ preventScroll: true });
     }
   };
 
