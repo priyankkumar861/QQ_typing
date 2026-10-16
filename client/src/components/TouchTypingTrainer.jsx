@@ -11,17 +11,20 @@ import {
   Lock, 
   Star, 
   Sparkles, 
-  ArrowRight,
-  ArrowLeft,
-  Flame,
-  LayoutGrid,
-  Play,
-  Trophy,
-  Zap,
-  Target
+  ArrowRight, 
+  ArrowLeft, 
+  Flame, 
+  LayoutGrid, 
+  Play, 
+  Trophy, 
+  Zap, 
+  Target, 
+  Hand, 
+  BookOpen 
 } from 'lucide-react';
 import { TOUCH_TYPING_STAGES, TOUCH_TYPING_LESSONS } from '../data/touchTypingData';
 import VirtualKeyboard from './VirtualKeyboard';
+import FingerPlacementTutorial from './FingerPlacementTutorial';
 
 export default function TouchTypingTrainer() {
   // Navigation Mode: 'roadmap' (Level Grid Map like EdClub) | 'practice' (Active Lesson Player)
@@ -253,6 +256,32 @@ export default function TouchTypingTrainer() {
             </div>
           </div>
 
+          {/* FEATURED: LESSON 0 INTERACTIVE 10-FINGER TUTORIAL */}
+          <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 border-2 border-emerald-500/50 rounded-3xl p-6 sm:p-7 text-white shadow-xl flex flex-wrap items-center justify-between gap-6 relative overflow-hidden">
+            <div className="space-y-2 max-w-2xl relative z-10">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                <Hand className="w-3.5 h-3.5" />
+                <span>Beginner Milestone • Lesson 0</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+                How to Place 10 Fingers on Keyboard (हाथ और 10 उँगलियाँ कैसे रखें)
+              </h2>
+              <p className="text-xs sm:text-sm text-emerald-100/85 leading-relaxed">
+                Learn the secret Home Row anchors (<strong>ASDF - JKL;</strong>), why <strong>F & J</strong> keys have tactile bumps, proper wrist posture, and test your placement with a <strong>Live 10-Finger Calibration</strong>.
+              </p>
+            </div>
+
+            <div className="relative z-10">
+              <button
+                onClick={() => setViewMode('tutorial')}
+                className="px-6 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm rounded-2xl shadow-lg shadow-emerald-500/30 transition-all flex items-center space-x-2 active:scale-95"
+              >
+                <Hand className="w-4 h-4 fill-current" />
+                <span>Start Finger Placement Tutorial →</span>
+              </button>
+            </div>
+          </div>
+
           {/* STAGES & LESSONS GRID (EdClub Style) */}
           <div className="space-y-8">
             {TOUCH_TYPING_STAGES.map((stage) => {
@@ -364,6 +393,15 @@ export default function TouchTypingTrainer() {
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>All Lessons</span>
+              </button>
+
+              <button
+                onClick={() => setViewMode('tutorial')}
+                className="hidden sm:flex items-center space-x-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold transition"
+                title="View 10-Finger Hand Placement Guide"
+              >
+                <Hand className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Hand Guide</span>
               </button>
 
               <div>
@@ -561,6 +599,19 @@ export default function TouchTypingTrainer() {
 
           </div>
         </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* VIEW 3: INTERACTIVE 10-FINGER PLACEMENT TUTORIAL          */}
+      {/* ========================================================= */}
+      {viewMode === 'tutorial' && (
+        <FingerPlacementTutorial
+          onStartLessons={() => {
+            setViewMode('practice');
+            startLesson(0);
+          }}
+          onBack={() => setViewMode('roadmap')}
+        />
       )}
 
     </div>
