@@ -590,110 +590,36 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
 
               </div>
 
-              {/* ============================================================== */}
-              {/* 3. UNIQUE EXAM-SPECIFIC CRITERIA STRUCTURE & FORMULA AUDIT     */}
-              {/* ============================================================== */}
-              {isNTPC ? (
-                /* RRB NTPC CBTST Audit Banner */
-                <div className="bg-amber-950/40 border-2 border-amber-500/60 rounded-xl p-4 sm:p-5 space-y-3 text-xs">
-                  <div className="flex items-center justify-between text-amber-300 font-bold border-b border-amber-600/40 pb-2.5">
-                    <span className="flex items-center gap-1.5 text-sm">
-                      <ShieldCheck className="w-5 h-5 text-amber-400" />
-                      Railway RRB NTPC (CBTST) Exam Net Speed Formula
+              {/* Railway RRB NTPC Penalty Audit (Only for Railway NTPC tests) */}
+              {isNTPC && (
+                <div className="bg-amber-950/40 border-2 border-amber-500/60 rounded-xl p-4 space-y-2 text-xs">
+                  <div className="flex items-center justify-between text-amber-300 font-bold border-b border-amber-600/40 pb-2">
+                    <span className="flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      Official Railway RRB NTPC Penalty Audit
                     </span>
-                    <span className="font-mono bg-amber-900 text-amber-200 px-2.5 py-1 rounded text-xs">
-                      Benchmark: Min 30 WPM (English) / 25 WPM (Hindi)
+                    <span className="font-mono bg-amber-900 text-amber-200 px-2 py-0.5 rounded text-[11px]">
+                      Formula: Net Words = Total Words - (Excess × 10)
                     </span>
                   </div>
-
-                  {/* 5-Step Formula & Live Candidate Calculation */}
-                  <div className="bg-slate-900/90 rounded-lg p-3.5 border border-slate-700 font-mono text-xs space-y-1.5 text-slate-300">
-                    <div className="text-amber-300 font-bold font-sans pb-1 flex items-center gap-1.5">
-                      <span>🧮 Step-by-Step Calculation Audit:</span>
-                    </div>
-                    <div>1. <strong className="text-white">Total Words</strong> = Keystrokes Typed ({result.totalKeystrokes}) ÷ 5 = <strong className="text-cyan-300">{result.standardWords || Math.round(result.totalKeystrokes / 5)} words</strong></div>
-                    <div>2. <strong className="text-white">Allowed Errors (5%)</strong> = Total Words ({result.standardWords || Math.round(result.totalKeystrokes / 5)}) × 0.05 = <strong className="text-emerald-300">{result.ignoredMistakes} errors (Free Margin)</strong></div>
-                    <div>3. <strong className="text-white">Excess Mistakes</strong> = Total Mistakes ({result.totalMistakes}) - Allowed Errors ({result.ignoredMistakes}) = <strong className="text-amber-300">{result.excessMistakes} mistakes</strong></div>
-                    <div>4. <strong className="text-white">Penalty Words</strong> = Excess Mistakes ({result.excessMistakes}) × 10 words = <strong className="text-rose-400">-{result.penaltyWordsDeducted} words deducted</strong></div>
-                    <div>5. <strong className="text-white">Net Speed (WPM)</strong> = [Total Words ({result.standardWords || Math.round(result.totalKeystrokes / 5)}) - Penalty Words ({result.penaltyWordsDeducted})] ÷ {result.timeTakenMinutes} = <strong className={`text-base font-black ${result.isQualified ? 'text-emerald-400' : 'text-rose-400'}`}>{result.netWPM} WPM ({result.isQualified ? 'QUALIFIED' : 'NOT QUALIFIED'})</strong></div>
-                  </div>
-
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center font-mono">
-                    <div className="bg-slate-900/80 p-2.5 rounded-lg border border-slate-700">
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
                       <div className="text-[10px] text-slate-400">Total Words (Keys÷5)</div>
                       <div className="text-white font-bold text-sm">{result.standardWords || Math.round(result.totalKeystrokes / 5)}</div>
                     </div>
-                    <div className="bg-slate-900/80 p-2.5 rounded-lg border border-slate-700">
-                      <div className="text-[10px] text-emerald-400">5% Allowed Margin</div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-emerald-400">5% Ignored Margin</div>
                       <div className="text-emerald-300 font-bold text-sm">{result.ignoredMistakes} words</div>
                     </div>
-                    <div className="bg-slate-900/80 p-2.5 rounded-lg border border-slate-700">
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
                       <div className="text-[10px] text-amber-400">Excess Mistakes</div>
                       <div className="text-amber-300 font-bold text-sm">{result.excessMistakes} words</div>
                     </div>
-                    <div className="bg-slate-900/80 p-2.5 rounded-lg border border-red-800/40">
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-red-800/40">
                       <div className="text-[10px] text-rose-400">Deduction (Excess × 10)</div>
                       <div className="text-rose-300 font-bold text-sm">-{result.penaltyWordsDeducted} words</div>
                     </div>
                   </div>
-                </div>
-              ) : isCGL ? (
-                /* SSC CGL Tier-II DEST Audit Banner */
-                <div className="bg-blue-950/40 border-2 border-blue-500/60 rounded-xl p-4 sm:p-5 space-y-3 text-xs">
-                  <div className="flex items-center justify-between text-blue-300 font-bold border-b border-blue-600/40 pb-2.5">
-                    <span className="flex items-center gap-1.5 text-sm">
-                      <ShieldCheck className="w-5 h-5 text-blue-400" />
-                      SSC CGL Tier-II DEST Official Evaluation Formula
-                    </span>
-                    <span className="font-mono bg-blue-900 text-blue-200 px-2.5 py-1 rounded text-xs">
-                      Target: 2,000 Keystrokes in 15 Min (8,000 KDPH)
-                    </span>
-                  </div>
-
-                  {/* 5-Step Formula & Live Candidate Calculation */}
-                  <div className="bg-slate-900/90 rounded-lg p-3.5 border border-slate-700 font-mono text-xs space-y-1.5 text-slate-300">
-                    <div className="text-blue-300 font-bold font-sans pb-1 flex items-center gap-1.5">
-                      <span>🧮 Step-by-Step Calculation Audit:</span>
-                    </div>
-                    <div>1. <strong className="text-white">Total Keystrokes</strong> = Characters typed including spaces = <strong className="text-white">{result.totalKeystrokes}</strong></div>
-                    <div>2. <strong className="text-white">Total Words</strong> = Keystrokes ({result.totalKeystrokes}) ÷ 5 = <strong className="text-cyan-300">{result.standardWords || Math.round(result.totalKeystrokes / 5)} words</strong></div>
-                    <div>3. <strong className="text-white">Total Mistakes</strong> = Full ({result.fullMistakes}) + (Half ({result.halfMistakes}) × 0.5) = <strong className="text-amber-300">{result.totalMistakes} mistakes</strong></div>
-                    <div>4. <strong className="text-white">Error Percentage</strong> = (Total Mistakes ÷ Total Words) × 100 = <strong className={`font-bold ${result.isAccuracyQualified ? 'text-emerald-400' : 'text-rose-400'}`}>{result.errorPercentage}%</strong></div>
-                    <div>5. <strong className="text-white">Qualification</strong> = Error % ≤ {result.maxAllowedError}% ({result.category} Cutoff) ➔ <strong className={`text-sm font-black ${result.isQualified ? 'text-emerald-400' : 'text-rose-400'}`}>{result.isQualified ? 'QUALIFIED' : 'NOT QUALIFIED'}</strong></div>
-                  </div>
-
-                  <p className="text-[11px] text-blue-200/90 pt-1 leading-relaxed">
-                    ⚡ <strong>Official SSC Rule (Zero Deductions):</strong> Unlike Railway RRB, SSC does <u>NOT</u> deduct words from your speed. Your speed is your actual typing rate ({result.grossWPM} WPM / {result.grossKDPH} KDPH). SSC evaluates you purely on <strong>Error Percentage</strong> against Commission cutoffs (UR: 5% | OBC/EWS: 7% | SC/ST/PwD: 10%).
-                  </p>
-                </div>
-              ) : (
-                /* SSC CHSL Tier-II Typing Audit Banner */
-                <div className="bg-emerald-950/40 border-2 border-emerald-500/60 rounded-xl p-4 sm:p-5 space-y-3 text-xs">
-                  <div className="flex items-center justify-between text-emerald-300 font-bold border-b border-emerald-600/40 pb-2.5">
-                    <span className="flex items-center gap-1.5 text-sm">
-                      <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                      SSC CHSL Tier-II Typing Official Evaluation Formula
-                    </span>
-                    <span className="font-mono bg-emerald-900 text-emerald-200 px-2.5 py-1 rounded text-xs">
-                      Benchmark: 35 WPM (10,500 KDPH) in 10 Min
-                    </span>
-                  </div>
-
-                  {/* 5-Step Formula & Live Candidate Calculation */}
-                  <div className="bg-slate-900/90 rounded-lg p-3.5 border border-slate-700 font-mono text-xs space-y-1.5 text-slate-300">
-                    <div className="text-emerald-300 font-bold font-sans pb-1 flex items-center gap-1.5">
-                      <span>🧮 Step-by-Step Calculation Audit:</span>
-                    </div>
-                    <div>1. <strong className="text-white">Total Keystrokes</strong> = Characters typed including spaces = <strong className="text-white">{result.totalKeystrokes}</strong></div>
-                    <div>2. <strong className="text-white">Total Words</strong> = Keystrokes ({result.totalKeystrokes}) ÷ 5 = <strong className="text-cyan-300">{result.standardWords || Math.round(result.totalKeystrokes / 5)} words</strong></div>
-                    <div>3. <strong className="text-white">Total Mistakes</strong> = Full ({result.fullMistakes}) + (Half ({result.halfMistakes}) × 0.5) = <strong className="text-amber-300">{result.totalMistakes} mistakes</strong></div>
-                    <div>4. <strong className="text-white">Error Percentage</strong> = (Total Mistakes ÷ Total Words) × 100 = <strong className={`font-bold ${result.isAccuracyQualified ? 'text-emerald-400' : 'text-rose-400'}`}>{result.errorPercentage}%</strong></div>
-                    <div>5. <strong className="text-white">Qualification</strong> = Error % ≤ {result.maxAllowedError}% ({result.category}) & Speed ≥ 35 WPM ➔ <strong className={`text-sm font-black ${result.isQualified ? 'text-emerald-400' : 'text-rose-400'}`}>{result.isQualified ? 'QUALIFIED' : 'NOT QUALIFIED'}</strong></div>
-                  </div>
-
-                  <p className="text-[11px] text-emerald-200/90 pt-1 leading-relaxed">
-                    ⚡ <strong>Official SSC Rule (Zero Deductions):</strong> In SSC CHSL, there is <u>NO</u> word deduction penalty. Your speed is your actual typing rate ({result.grossWPM} WPM). SSC evaluates you purely on <strong>Error Percentage</strong> against Commission cutoffs (UR: 7% | OBC/EWS/SC/ST/PwD: 10%) and achieving ≥ 35 WPM speed.
-                  </p>
                 </div>
               )}
 
