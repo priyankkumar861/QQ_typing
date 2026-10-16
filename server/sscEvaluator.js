@@ -282,8 +282,11 @@ function evaluateTyping({
   // Formula: (Keystrokes / timeTakenMinutes) * 60
   const grossKDPH = Math.round((grossKeystrokes / timeTakenMinutes) * 60);
 
-  // Gross Words Per Minute (Standard 5 keystrokes = 1 word or totalTypedWords)
-  const grossWPM = Number(((grossKeystrokes / 5) / timeTakenMinutes).toFixed(2));
+  // Standard Words (1 word = 5 keystrokes including spaces)
+  const standardWords = grossKeystrokes > 0 ? Number((grossKeystrokes / 5).toFixed(1)) : totalTypedWords;
+
+  // Gross Words Per Minute (Standard 5 keystrokes = 1 word)
+  const grossWPM = Number((standardWords / timeTakenMinutes).toFixed(2));
 
   let netWPM = 0;
   let penaltyWordsDeducted = 0;
@@ -299,7 +302,8 @@ function evaluateTyping({
   const isCGL = examType === "SSC_CGL" || examType?.startsWith("SSC_CGL");
   const isCHSL = !isNTPC && !isCGL;
 
-  const baseWordsForError = totalTypedWords > 0 ? totalTypedWords : totalOriginalWords;
+  // SSC Formula: Total Words = Keystrokes ÷ 5; Error % = (Total Mistakes ÷ Total Words) × 100
+  const baseWordsForError = standardWords > 0 ? standardWords : (totalTypedWords > 0 ? totalTypedWords : totalOriginalWords);
   errorPercentage = baseWordsForError > 0 
     ? Number(((totalMistakes / baseWordsForError) * 100).toFixed(2)) 
     : 0;
@@ -322,10 +326,16 @@ function evaluateTyping({
     requiredKDPH = 9000;
     maxAllowedError = 5.0; // 5% ignored margin across all categories
 
-    ignoredMistakes = Number((totalTypedWords * 0.05).toFixed(2));
+    // 1. Total Words = Keystrokes Typed ÷ 5
+    const railwayTotalWords = standardWords > 0 ? standardWords : (totalTypedWords > 0 ? totalTypedWords : 1);
+    // 2. Allowed Errors (5%) = Total Words × 0.05
+    ignoredMistakes = Number((railwayTotalWords * 0.05).toFixed(2));
+    // 3. Excess Mistakes = Total Mistakes - Allowed Errors
     excessMistakes = Math.max(0, Number((totalMistakes - ignoredMistakes).toFixed(2)));
+    // 4. Penalty Words = Excess Mistakes × 10 words
     penaltyWordsDeducted = Math.round(excessMistakes * 10);
-    const netWords = Math.max(0, totalTypedWords - penaltyWordsDeducted);
+    // 5. Net Speed (WPM) = [Total Words - Penalty Words] ÷ Time
+    const netWords = Math.max(0, railwayTotalWords - penaltyWordsDeducted);
     netWPM = Number((netWords / timeTakenMinutes).toFixed(2));
 
   } else if (isCGL) {
@@ -490,6 +500,7 @@ function evaluateTyping({
     timeTakenMinutes: Number(timeTakenMinutes.toFixed(2)),
     totalOriginalWords,
     totalTypedWords,
+    standardWords,
     totalKeystrokes: grossKeystrokes,
     backspaceCount,
     correctWordsCount,
