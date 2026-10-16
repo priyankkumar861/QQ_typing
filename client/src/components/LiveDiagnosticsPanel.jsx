@@ -29,8 +29,8 @@ export default function LiveDiagnosticsPanel({
   setHallNoiseEnabled,
   onCollapse
 }) {
-  const isNTPC = examType === 'RRB_NTPC';
-  const isCGL = examType === 'SSC_CGL';
+  const isNTPC = examType === 'RRB_NTPC' || examType?.startsWith('RRB_NTPC') || examType?.includes('NTPC') || examType?.includes('RAILWAY');
+  const isCGL = examType === 'SSC_CGL' || examType?.startsWith('SSC_CGL');
 
   // Target KDPH
   const targetKDPH = isCGL ? 8000 : (isNTPC ? 9000 : 10500);

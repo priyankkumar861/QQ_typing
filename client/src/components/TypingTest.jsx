@@ -48,9 +48,8 @@ export default function TypingTest({
   // Assessment Mode: 'practice' (with live sidebar & guidance) vs 'exam' (strict distraction-free CBT)
   const [mode, setMode] = useState(initialMode);
   
-  // Strict Exam-Specific Rules: In RRB NTPC, exam strictly uses TCS iON pattern only
-  const isNTPC = candidateInfo?.examType === 'RRB_NTPC' || candidateInfo?.examType?.startsWith('RRB_NTPC') || passage?.category?.startsWith('RRB NTPC');
-  const isCGL = candidateInfo?.examType === 'SSC_CGL';
+  const isNTPC = candidateInfo?.examType === 'RRB_NTPC' || candidateInfo?.examType?.startsWith('RRB_NTPC') || candidateInfo?.examType?.includes('NTPC') || passage?.category?.startsWith('RRB NTPC');
+  const isCGL = candidateInfo?.examType === 'SSC_CGL' || candidateInfo?.examType?.startsWith('SSC_CGL');
   const examDurationMinutes = isCGL ? 15 : 10;
 
   // Interface Pattern: If NTPC, strictly 'tcs', else initialPattern

@@ -293,16 +293,34 @@ function evaluateTyping({
   let requiredWPM = 35;
   let maxAllowedError = 5.0;
   let requiredKDPH = 10500;
+  let examDisplayName = "SSC CHSL Tier-II Typing Test";
 
-  if (examType === "RRB_NTPC") {
-    // Official Railway RRB NTPC Formula:
-    // 1. 5% mistakes of total typed words are ignored
-    // 2. Excess mistakes beyond 5% deduct 10 words per mistake
-    // 3. Net Words = Total Typed Words - (Excess Mistakes * 10)
-    // 4. Net Speed = Net Words / Time in Minutes
-    requiredWPM = 30; // 30 WPM English / 25 WPM Hindi
+  const isNTPC = examType === "RRB_NTPC" || examType?.startsWith("RRB_NTPC") || examType?.includes("NTPC") || examType?.includes("RAILWAY");
+  const isCGL = examType === "SSC_CGL" || examType?.startsWith("SSC_CGL");
+  const isCHSL = !isNTPC && !isCGL;
+
+  const baseWordsForError = totalTypedWords > 0 ? totalTypedWords : totalOriginalWords;
+  errorPercentage = baseWordsForError > 0 
+    ? Number(((totalMistakes / baseWordsForError) * 100).toFixed(2)) 
+    : 0;
+
+  if (isNTPC) {
+    // -------------------------------------------------------------------------
+    // CRITERIA 1: OFFICIAL RAILWAY RRB NTPC (CBTST) EVALUATION FORMULA
+    // - Applicable to: RRB NTPC Graduate (Level 5) & Under Graduate (Level 2)
+    // - Qualifying Speed: 30 WPM (English) / 25 WPM (Hindi)
+    // - Duration: 10 Minutes
+    // - Error Buffer: 5% mistakes of total typed words are forgiven for ALL categories
+    // - Penalty: 10 words deducted for EVERY excess mistake beyond 5% buffer
+    //   Penalty Words = Excess Mistakes × 10
+    //   Net Words = max(0, Total Typed Words - Penalty Words)
+    //   Net Speed = Net Words / Time in Minutes
+    // - Qualification: Strictly Net Speed >= 30 WPM (English) / 25 WPM (Hindi)
+    // -------------------------------------------------------------------------
+    examDisplayName = "RRB NTPC Typing Skill Test (CBTST)";
+    requiredWPM = 30;
     requiredKDPH = 9000;
-    maxAllowedError = 5.0;
+    maxAllowedError = 5.0; // 5% ignored margin across all categories
 
     ignoredMistakes = Number((totalTypedWords * 0.05).toFixed(2));
     excessMistakes = Math.max(0, Number((totalMistakes - ignoredMistakes).toFixed(2)));
@@ -310,14 +328,20 @@ function evaluateTyping({
     const netWords = Math.max(0, totalTypedWords - penaltyWordsDeducted);
     netWPM = Number((netWords / timeTakenMinutes).toFixed(2));
 
-    const baseWordsForError = totalTypedWords > 0 ? totalTypedWords : totalOriginalWords;
-    errorPercentage = baseWordsForError > 0 
-      ? Number(((totalMistakes / baseWordsForError) * 100).toFixed(2)) 
-      : 0;
-  } else if (examType === "SSC_CGL") {
-    // Official SSC CGL Tier-II DEST:
-    // 15-minute test, 2,000 keystrokes = 8,000 KDPH (~26.67 to 27 WPM)
-    // Error thresholds: 5% UR, 7% OBC/EWS, 10% SC/ST
+  } else if (isCGL) {
+    // -------------------------------------------------------------------------
+    // CRITERIA 2: OFFICIAL SSC CGL TIER-II DEST EVALUATION FORMULA
+    // - Applicable to: All CGL posts requiring Data Entry Speed Test (DEST)
+    // - Target: 2,000 Key Depressions in 15 Minutes (= 8,000 KDPH / ~27 WPM)
+    // - Full Mistake (1.0) & Half Mistake (0.5)
+    // - Official Commission Error Cutoffs:
+    //   * UR: Max 5% Error (Min 95% Accuracy)
+    //   * OBC / EWS: Max 7% Error (Min 93% Accuracy)
+    //   * SC / ST / PwD / ESM: Max 10% Error (Min 90% Accuracy)
+    // - Net Speed = Gross WPM - (Total Mistakes / Time in Minutes)
+    // - Qualification: Error % <= Category Cutoff AND Net Speed >= 27 WPM (or 8000 KDPH)
+    // -------------------------------------------------------------------------
+    examDisplayName = "SSC CGL Tier-II DEST";
     requiredWPM = 27;
     requiredKDPH = 8000;
     maxAllowedError = (category === "UR") ? 5.0 : (["OBC", "EWS"].includes(category) ? 7.0 : 10.0);
@@ -325,25 +349,25 @@ function evaluateTyping({
     const penaltyWPM = Number((totalMistakes / timeTakenMinutes).toFixed(2));
     netWPM = Math.max(0, Number((grossWPM - penaltyWPM).toFixed(2)));
 
-    const baseWordsForError = totalTypedWords > 0 ? totalTypedWords : totalOriginalWords;
-    errorPercentage = baseWordsForError > 0 
-      ? Number(((totalMistakes / baseWordsForError) * 100).toFixed(2)) 
-      : 0;
   } else {
-    // SSC CHSL Tier-II Typing:
-    // 10-minute test, 1,750 keystrokes = 10,500 KDPH (35 WPM)
-    // Error thresholds: 7% UR, 10% OBC/EWS/SC/ST
+    // -------------------------------------------------------------------------
+    // CRITERIA 3: OFFICIAL SSC CHSL TIER-II TYPING EVALUATION FORMULA
+    // - Applicable to: SSC CHSL LDC / JSA / Clerk posts
+    // - Target: 35 WPM English (10,500 KDPH, 1,750 Keystrokes in 10 Minutes)
+    //   [30 WPM Hindi (9,000 KDPH, 1,500 Keystrokes in 10 Minutes)]
+    // - Official Commission Error Cutoffs:
+    //   * UR: Max 7% Error (Min 93% Accuracy)
+    //   * OBC / EWS / SC / ST / PwD: Max 10% Error (Min 90% Accuracy)
+    // - Net Speed = Gross WPM - (Total Mistakes / Time in Minutes)
+    // - Qualification: Error % <= Category Cutoff AND Net Speed >= 35 WPM
+    // -------------------------------------------------------------------------
+    examDisplayName = "SSC CHSL Tier-II Typing Test";
     requiredWPM = 35;
     requiredKDPH = 10500;
     maxAllowedError = (category === "UR") ? 7.0 : 10.0;
 
     const penaltyWPM = Number((totalMistakes / timeTakenMinutes).toFixed(2));
     netWPM = Math.max(0, Number((grossWPM - penaltyWPM).toFixed(2)));
-
-    const baseWordsForError = totalTypedWords > 0 ? totalTypedWords : totalOriginalWords;
-    errorPercentage = baseWordsForError > 0 
-      ? Number(((totalMistakes / baseWordsForError) * 100).toFixed(2)) 
-      : 0;
   }
 
   // Accuracy %
@@ -351,45 +375,45 @@ function evaluateTyping({
     ? Math.max(0, Number(((1 - (totalMistakes / totalTypedWords)) * 100).toFixed(2)))
     : 0;
 
-  const isSpeedQualified = netWPM >= requiredWPM;
-  const isAccuracyQualified = errorPercentage <= maxAllowedError;
+  const isSpeedQualified = isCGL ? (netWPM >= requiredWPM || grossKDPH >= requiredKDPH) : (netWPM >= requiredWPM);
+  const isAccuracyQualified = isNTPC ? (netWPM >= requiredWPM) : (errorPercentage <= maxAllowedError);
 
   // 1. OFFICIAL CATEGORY-WISE CUTOFF DEFINITIONS & COMPARISON
   let categoryCutoffs = [];
-  if (examType === "SSC_CGL") {
+  if (isNTPC) {
     categoryCutoffs = [
-      { category: "UR", maxError: 5.0, minAccuracy: 95.0, description: "Unreserved (UR): Max 5% Errors (Min 95% Accuracy, 8000 KDPH)" },
-      { category: "OBC", maxError: 7.0, minAccuracy: 93.0, description: "OBC: Max 7% Errors (Min 93% Accuracy, 8000 KDPH)" },
-      { category: "EWS", maxError: 7.0, minAccuracy: 93.0, description: "EWS: Max 7% Errors (Min 93% Accuracy, 8000 KDPH)" },
-      { category: "SC", maxError: 10.0, minAccuracy: 90.0, description: "SC: Max 10% Errors (Min 90% Accuracy, 8000 KDPH)" },
-      { category: "ST", maxError: 10.0, minAccuracy: 90.0, description: "ST: Max 10% Errors (Min 90% Accuracy, 8000 KDPH)" },
-      { category: "PwD", maxError: 10.0, minAccuracy: 90.0, description: "PwD / ESM: Max 10% Errors (Min 90% Accuracy, 8000 KDPH)" }
+      { category: "UR", maxError: 5.0, minAccuracy: 95.0, description: "UR: Min 30 WPM (5% Mistakes Ignored Buffer, Excess × 10 Penalty)" },
+      { category: "OBC", maxError: 5.0, minAccuracy: 95.0, description: "OBC: Min 30 WPM (5% Mistakes Ignored Buffer, Excess × 10 Penalty)" },
+      { category: "EWS", maxError: 5.0, minAccuracy: 95.0, description: "EWS: Min 30 WPM (5% Mistakes Ignored Buffer, Excess × 10 Penalty)" },
+      { category: "SC", maxError: 5.0, minAccuracy: 95.0, description: "SC: Min 30 WPM (5% Mistakes Ignored Buffer, Excess × 10 Penalty)" },
+      { category: "ST", maxError: 5.0, minAccuracy: 95.0, description: "ST: Min 30 WPM (5% Mistakes Ignored Buffer, Excess × 10 Penalty)" },
+      { category: "PwD", maxError: 5.0, minAccuracy: 95.0, description: "PwD: Min 30 WPM (5% Mistakes Ignored Buffer, Excess × 10 Penalty)" }
     ];
-  } else if (examType === "SSC_CHSL") {
+  } else if (isCGL) {
     categoryCutoffs = [
-      { category: "UR", maxError: 7.0, minAccuracy: 93.0, description: "Unreserved (UR): Max 7% Errors (35 WPM / 10,500 KDPH)" },
-      { category: "OBC", maxError: 10.0, minAccuracy: 90.0, description: "OBC: Max 10% Errors (35 WPM / 10,500 KDPH)" },
-      { category: "EWS", maxError: 10.0, minAccuracy: 90.0, description: "EWS: Max 10% Errors (35 WPM / 10,500 KDPH)" },
-      { category: "SC", maxError: 10.0, minAccuracy: 90.0, description: "SC: Max 10% Errors (35 WPM / 10,500 KDPH)" },
-      { category: "ST", maxError: 10.0, minAccuracy: 90.0, description: "ST: Max 10% Errors (35 WPM / 10,500 KDPH)" },
-      { category: "PwD", maxError: 10.0, minAccuracy: 90.0, description: "PwD / ESM: Max 10% Errors (35 WPM / 10,500 KDPH)" }
+      { category: "UR", maxError: 5.0, minAccuracy: 95.0, description: "UR: Max 5% Error (Min 95% Accuracy, 8,000 KDPH / ~27 WPM)" },
+      { category: "OBC", maxError: 7.0, minAccuracy: 93.0, description: "OBC: Max 7% Error (Min 93% Accuracy, 8,000 KDPH / ~27 WPM)" },
+      { category: "EWS", maxError: 7.0, minAccuracy: 93.0, description: "EWS: Max 7% Error (Min 93% Accuracy, 8,000 KDPH / ~27 WPM)" },
+      { category: "SC", maxError: 10.0, minAccuracy: 90.0, description: "SC: Max 10% Error (Min 90% Accuracy, 8,000 KDPH / ~27 WPM)" },
+      { category: "ST", maxError: 10.0, minAccuracy: 90.0, description: "ST: Max 10% Error (Min 90% Accuracy, 8,000 KDPH / ~27 WPM)" },
+      { category: "PwD", maxError: 10.0, minAccuracy: 90.0, description: "PwD / ESM: Max 10% Error (Min 90% Accuracy, 8,000 KDPH / ~27 WPM)" }
     ];
   } else {
-    // RRB NTPC: 30 WPM English / 25 WPM Hindi, 5% mistakes ignored, excess * 10 deducted
+    // SSC CHSL
     categoryCutoffs = [
-      { category: "UR", maxError: 5.0, minAccuracy: 95.0, description: "UR: Min 30 WPM (5% Errors Ignored, Excess × 10 Penalty)" },
-      { category: "OBC", maxError: 5.0, minAccuracy: 95.0, description: "OBC: Min 30 WPM (5% Errors Ignored, Excess × 10 Penalty)" },
-      { category: "EWS", maxError: 5.0, minAccuracy: 95.0, description: "EWS: Min 30 WPM (5% Errors Ignored, Excess × 10 Penalty)" },
-      { category: "SC", maxError: 5.0, minAccuracy: 95.0, description: "SC: Min 30 WPM (5% Errors Ignored, Excess × 10 Penalty)" },
-      { category: "ST", maxError: 5.0, minAccuracy: 95.0, description: "ST: Min 30 WPM (5% Errors Ignored, Excess × 10 Penalty)" },
-      { category: "PwD", maxError: 5.0, minAccuracy: 95.0, description: "PwD: Min 30 WPM (5% Errors Ignored, Excess × 10 Penalty)" }
+      { category: "UR", maxError: 7.0, minAccuracy: 93.0, description: "UR: Max 7% Error (Min 93% Accuracy, 35 WPM / 10,500 KDPH)" },
+      { category: "OBC", maxError: 10.0, minAccuracy: 90.0, description: "OBC: Max 10% Error (Min 90% Accuracy, 35 WPM / 10,500 KDPH)" },
+      { category: "EWS", maxError: 10.0, minAccuracy: 90.0, description: "EWS: Max 10% Error (Min 90% Accuracy, 35 WPM / 10,500 KDPH)" },
+      { category: "SC", maxError: 10.0, minAccuracy: 90.0, description: "SC: Max 10% Error (Min 90% Accuracy, 35 WPM / 10,500 KDPH)" },
+      { category: "ST", maxError: 10.0, minAccuracy: 90.0, description: "ST: Max 10% Error (Min 90% Accuracy, 35 WPM / 10,500 KDPH)" },
+      { category: "PwD", maxError: 10.0, minAccuracy: 90.0, description: "PwD / ESM: Max 10% Error (Min 90% Accuracy, 35 WPM / 10,500 KDPH)" }
     ];
   }
 
   const categoryComparison = categoryCutoffs.map(item => {
     let qualified = false;
-    if (examType === "RRB_NTPC") {
-      qualified = netWPM >= 30;
+    if (isNTPC) {
+      qualified = netWPM >= requiredWPM;
     } else {
       qualified = errorPercentage <= item.maxError && isSpeedQualified;
     }
@@ -405,7 +429,7 @@ function evaluateTyping({
 
   // Candidate's own category qualification check
   const candidateCategoryObj = categoryComparison.find(c => c.isCandidateCategory) || categoryComparison[0];
-  const isQualified = candidateCategoryObj.isQualified;
+  const isQualified = isNTPC ? (netWPM >= requiredWPM) : candidateCategoryObj.isQualified;
 
   // 2. WEAK WORDS EXTRACTION & DIAGNOSTIC ANALYSIS
   const weakWordsMap = new Map();
@@ -450,6 +474,7 @@ function evaluateTyping({
 
   return {
     examType,
+    examDisplayName,
     category,
     candidateCategory: candidateCategoryObj.category,
     categoryMaxAllowedError: candidateCategoryObj.maxAllowedError,

@@ -13,8 +13,8 @@ export default function TcsExamHeader({
   onFinishTest,
   onExitTest
 }) {
-  const isNTPC = candidateInfo?.examType === 'RRB_NTPC';
-  const isCGL = candidateInfo?.examType === 'SSC_CGL';
+  const isNTPC = candidateInfo?.examType === 'RRB_NTPC' || candidateInfo?.examType?.startsWith('RRB_NTPC') || candidateInfo?.examType?.includes('NTPC');
+  const isCGL = candidateInfo?.examType === 'SSC_CGL' || candidateInfo?.examType?.startsWith('SSC_CGL');
 
   return (
     <div className="bg-[#2b3a4a] text-white border-b-2 border-[#1a2530] shadow-sm select-none">

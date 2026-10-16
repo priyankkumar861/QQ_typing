@@ -39,6 +39,14 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
 
   const targetReps = 3; // Type each weak word 3 times correctly to master it
 
+  const isNTPC = result.examType === 'RRB_NTPC' || result.examType?.startsWith('RRB_NTPC') || result.examType?.includes('NTPC') || result.examType?.includes('RAILWAY');
+  const isCGL = result.examType === 'SSC_CGL' || result.examType?.startsWith('SSC_CGL');
+  const isCHSL = !isNTPC && !isCGL;
+
+  const examLabel = result.examDisplayName || (isNTPC 
+    ? 'RRB NTPC CBTST' 
+    : (isCGL ? 'SSC CGL Tier-II DEST' : 'SSC CHSL Tier-II Typing'));
+
   const weakWordsList = result.weakWords || [];
   const currentWeakWord = weakWordsList[currentWordIdx];
 
@@ -317,19 +325,39 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
               </div>
               
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-                {result.isQualified 
-                  ? `QUALIFIED UNDER ${result.category} CATEGORY` 
-                  : `DID NOT QUALIFY UNDER ${result.category} CATEGORY`}
+                {isNTPC ? (
+                  result.isQualified 
+                    ? `QUALIFIED FOR RAILWAY RRB NTPC CBTST` 
+                    : `DID NOT QUALIFY FOR RAILWAY RRB NTPC CBTST`
+                ) : isCGL ? (
+                  result.isQualified 
+                    ? `QUALIFIED UNDER ${result.category} (SSC CGL DEST)` 
+                    : `DID NOT QUALIFY UNDER ${result.category} (SSC CGL DEST)`
+                ) : (
+                  result.isQualified 
+                    ? `QUALIFIED UNDER ${result.category} (SSC CHSL TYPING)` 
+                    : `DID NOT QUALIFY UNDER ${result.category} (SSC CHSL TYPING)`
+                )}
               </h2>
 
               <p className="text-sm font-semibold text-white/95 mt-1">
-                Paper: <span className="underline">{result.examType.replace('_', ' ')}</span> • Candidate Category: <span className="bg-white/20 px-2 py-0.5 rounded font-black">{result.category}</span>
+                Examination: <span className="underline font-bold">{examLabel}</span> • Candidate Category: <span className="bg-white/20 px-2 py-0.5 rounded font-black">{result.category}</span>
               </p>
 
               <p className="text-xs text-white/85 mt-1.5 max-w-xl mx-auto leading-relaxed">
-                {result.isQualified 
-                  ? `Congratulations! As per official commission cutoff for ${result.category} category (Max Allowed: ${result.maxAllowedError}%), your Error Rate of ${result.errorPercentage}% and Net Speed of ${result.netWPM} WPM qualify for final appointment.`
-                  : `Official cutoff for ${result.category} requires max ${result.maxAllowedError}% error and ${result.requiredWPM} WPM speed. Your Error Rate was ${result.errorPercentage}% and Net Speed was ${result.netWPM} WPM.`}
+                {isNTPC ? (
+                  result.isQualified 
+                    ? `Congratulations! As per official Railway RRB NTPC criteria (Net Speed ≥ ${result.requiredWPM} WPM with 5% ignored error buffer & 10x penalty on excess mistakes), your Net Speed of ${result.netWPM} WPM qualifies for final appointment.`
+                    : `Official Railway RRB NTPC criteria requires Net Speed ≥ ${result.requiredWPM} WPM (after applying 10 words penalty per excess mistake beyond 5% ignored buffer). Your Net Speed was ${result.netWPM} WPM.`
+                ) : isCGL ? (
+                  result.isQualified
+                    ? `Congratulations! As per official SSC CGL DEST criteria for ${result.category} category (Max Allowed: ${result.maxAllowedError}%, Min Speed: 8,000 KDPH / 27 WPM), your Error Rate of ${result.errorPercentage}% and Speed of ${result.netWPM} WPM qualify for final appointment.`
+                    : `Official SSC CGL DEST cutoff for ${result.category} requires max ${result.maxAllowedError}% error and 8,000 KDPH / 27 WPM speed. Your Error Rate was ${result.errorPercentage}% and Net Speed was ${result.netWPM} WPM.`
+                ) : (
+                  result.isQualified 
+                    ? `Congratulations! As per official SSC CHSL cutoff for ${result.category} category (Max Allowed: ${result.maxAllowedError}%, Min Speed: 35 WPM / 10,500 KDPH), your Error Rate of ${result.errorPercentage}% and Net Speed of ${result.netWPM} WPM qualify for final appointment.`
+                    : `Official SSC CHSL cutoff for ${result.category} requires max ${result.maxAllowedError}% error and 35 WPM speed. Your Error Rate was ${result.errorPercentage}% and Net Speed was ${result.netWPM} WPM.`
+                )}
               </p>
             </div>
 
@@ -361,7 +389,9 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                     {result.netWPM}
                   </div>
                   <div className="text-[11px] text-slate-400 mt-1">
-                    Req: <span className="text-slate-200 font-bold">{result.requiredWPM} WPM</span>
+                    Req: <span className="text-slate-200 font-bold">
+                      {isNTPC ? '30 WPM (English)' : (isCGL ? '27 WPM (8K KDPH)' : '35 WPM (10.5K KDPH)')}
+                    </span>
                   </div>
                 </div>
 
@@ -374,7 +404,11 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                     {result.errorPercentage}%
                   </div>
                   <div className="text-[11px] text-slate-400 mt-1">
-                    {result.category} Cutoff: <span className="text-slate-200 font-bold">{result.maxAllowedError}%</span>
+                    {isNTPC ? (
+                      <span>Ignored Buffer: <strong className="text-slate-200">5% (All Quotas)</strong></span>
+                    ) : (
+                      <span>{result.category} Cutoff: <strong className="text-slate-200">{result.maxAllowedError}%</strong></span>
+                    )}
                   </div>
                 </div>
 
@@ -400,7 +434,7 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                     {result.grossKDPH}
                   </div>
                   <div className="text-[11px] text-slate-400 mt-1">
-                    KDPH (Depr / Hour)
+                    {isCGL ? 'Target: 8,000 (15 Min)' : (isNTPC ? 'Target: 9,000 KDPH' : 'Target: 10,500 KDPH')}
                   </div>
                 </div>
 
@@ -463,7 +497,13 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                   </div>
 
                   <p className="text-[11px] text-slate-400 pt-1 leading-relaxed">
-                    ℹ️ In <strong>{result.examType.replace('_', ' ')}</strong>, candidates are evaluated against their respective quota cutoff. Your official appointment qualification is calculated under <strong className="text-white">{result.category}</strong> standards.
+                    {isNTPC ? (
+                      <span>ℹ️ In <strong>Railway RRB NTPC CBTST</strong>, the 5% error buffer applies uniformly across ALL categories (UR, OBC, SC, ST, EWS). Qualification is strictly based on achieving Net Speed ≥ 30 WPM after 10-word deductions per excess mistake.</span>
+                    ) : isCGL ? (
+                      <span>ℹ️ In <strong>SSC CGL Tier-II DEST</strong>, candidates are evaluated against commission cutoffs (UR: 5%, OBC/EWS: 7%, SC/ST: 10%, Speed ≥ 27 WPM / 8,000 KDPH). Your appointment status is evaluated under <strong className="text-white">{result.category}</strong> quota.</span>
+                    ) : (
+                      <span>ℹ️ In <strong>SSC CHSL Tier-II Typing</strong>, candidates are evaluated against commission cutoffs (UR: 7%, OBC/EWS/SC/ST: 10%, Speed ≥ 35 WPM / 10,500 KDPH). Your appointment status is evaluated under <strong className="text-white">{result.category}</strong> quota.</span>
+                    )}
                   </p>
                 </div>
               )}
@@ -550,13 +590,16 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
 
               </div>
 
-              {/* Special Official RRB NTPC Penalty Mechanism Banner */}
-              {result.examType === 'RRB_NTPC' && (
+              {/* ============================================================== */}
+              {/* 3. UNIQUE EXAM-SPECIFIC CRITERIA STRUCTURE & PENALTY AUDIT     */}
+              {/* ============================================================== */}
+              {isNTPC ? (
+                /* RRB NTPC CBTST Audit Banner */
                 <div className="bg-amber-950/40 border-2 border-amber-500/60 rounded-xl p-4 space-y-2 text-xs">
                   <div className="flex items-center justify-between text-amber-300 font-bold border-b border-amber-600/40 pb-2">
                     <span className="flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-amber-400" />
-                      Official Railway RRB NTPC Penalty Audit
+                      Official Railway RRB NTPC CBTST Criteria & Penalty Audit
                     </span>
                     <span className="font-mono bg-amber-900 text-amber-200 px-2 py-0.5 rounded text-[11px]">
                       Formula: Net Words = Typed Words - (Excess × 10)
@@ -580,16 +623,91 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                       <div className="text-rose-300 font-bold text-sm">-{result.penaltyWordsDeducted} words</div>
                     </div>
                   </div>
+                  <p className="text-[11px] text-amber-200/80 pt-1 leading-relaxed">
+                    ⚡ <strong>Railway Rule:</strong> Up to 5% of typed words are forgiven with zero penalty for ALL categories. For each mistake beyond 5%, exactly 10 words are deducted from total words typed. Qualification is strictly Net Speed ≥ 30 WPM (English) / 25 WPM (Hindi). Backspace is disabled.
+                  </p>
+                </div>
+              ) : isCGL ? (
+                /* SSC CGL Tier-II DEST Audit Banner */
+                <div className="bg-blue-950/40 border-2 border-blue-500/60 rounded-xl p-4 space-y-2 text-xs">
+                  <div className="flex items-center justify-between text-blue-300 font-bold border-b border-blue-600/40 pb-2">
+                    <span className="flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-blue-400" />
+                      Official SSC CGL Tier-II DEST Criteria & Audit
+                    </span>
+                    <span className="font-mono bg-blue-900 text-blue-200 px-2 py-0.5 rounded text-[11px]">
+                      Target: 2,000 Keystrokes in 15 Min (8,000 KDPH)
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center font-mono">
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-slate-400">Total Keystrokes</div>
+                      <div className="text-white font-bold text-sm">{result.totalKeystrokes} / 2000</div>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-blue-400">KDPH Rate</div>
+                      <div className="text-blue-300 font-bold text-sm">{result.grossKDPH} KDPH</div>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-amber-400">{result.category} Cutoff</div>
+                      <div className="text-amber-300 font-bold text-sm">Max {result.maxAllowedError}% Error</div>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-emerald-800/40">
+                      <div className="text-[10px] text-emerald-400">DEST Verdict</div>
+                      <div className={`font-bold text-sm ${result.isQualified ? 'text-emerald-300' : 'text-rose-300'}`}>
+                        {result.isQualified ? 'QUALIFIED' : 'NOT QUALIFIED'}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-blue-200/80 pt-1 leading-relaxed">
+                    ⚡ <strong>SSC CGL DEST Rule:</strong> 15-minute examination. Commission cutoffs: UR: 5% max error | OBC/EWS: 7% max error | SC/ST/PwD: 10% max error. Candidates must achieve error rate ≤ cutoff and maintain speed benchmark (~27 WPM / 8,000 KDPH). Backspace is permitted.
+                  </p>
+                </div>
+              ) : (
+                /* SSC CHSL Tier-II Typing Audit Banner */
+                <div className="bg-emerald-950/40 border-2 border-emerald-500/60 rounded-xl p-4 space-y-2 text-xs">
+                  <div className="flex items-center justify-between text-emerald-300 font-bold border-b border-emerald-600/40 pb-2">
+                    <span className="flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      Official SSC CHSL Tier-II Typing Test Criteria & Audit
+                    </span>
+                    <span className="font-mono bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded text-[11px]">
+                      Benchmark: 35 WPM (10,500 KDPH) in 10 Min
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center font-mono">
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-slate-400">Net Speed</div>
+                      <div className="text-white font-bold text-sm">{result.netWPM} WPM</div>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-emerald-400">Required Speed</div>
+                      <div className="text-emerald-300 font-bold text-sm">{result.requiredWPM} WPM</div>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
+                      <div className="text-[10px] text-amber-400">{result.category} Cutoff</div>
+                      <div className="text-amber-300 font-bold text-sm">Max {result.maxAllowedError}% Error</div>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded-lg border border-emerald-800/40">
+                      <div className="text-[10px] text-emerald-400">Typing Verdict</div>
+                      <div className={`font-bold text-sm ${result.isQualified ? 'text-emerald-300' : 'text-rose-300'}`}>
+                        {result.isQualified ? 'QUALIFIED' : 'NOT QUALIFIED'}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-emerald-200/80 pt-1 leading-relaxed">
+                    ⚡ <strong>SSC CHSL Rule:</strong> 10-minute examination. Benchmark speed: 35 WPM English (10,500 KDPH) / 30 WPM Hindi. Commission error cutoffs: UR: 7% max error | OBC/EWS/SC/ST/PwD: 10% max error. Qualification requires meeting BOTH speed (≥35 WPM) and error thresholds. Backspace is permitted.
+                  </p>
                 </div>
               )}
 
-              {/* Detailed SSC Full & Half Mistakes Breakdown */}
+              {/* Detailed SSC / Railway Full & Half Mistakes Breakdown */}
               <div className="bg-slate-800/70 rounded-xl border border-slate-700 p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-700 pb-3">
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="w-5 h-5 text-blue-400" />
                     <h4 className="font-bold text-white text-sm">
-                      {result.examType === 'RRB_NTPC' ? 'Railway NTPC Mistake Classification' : 'Official SSC Full & Half Mistakes Breakdown'}
+                      {isNTPC ? 'Railway NTPC Mistake Classification' : (isCGL ? 'SSC CGL DEST Mistake Classification' : 'SSC CHSL Mistake Classification')}
                     </h4>
                   </div>
                   <span className="text-xs text-slate-400">

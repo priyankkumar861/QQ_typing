@@ -31,8 +31,8 @@ export default function EdiquityExamHeader({
   examInterfacePattern,
   setExamInterfacePattern
 }) {
-  const isNTPC = candidateInfo?.examType === 'RRB_NTPC';
-  const isCGL = candidateInfo?.examType === 'SSC_CGL';
+  const isNTPC = candidateInfo?.examType === 'RRB_NTPC' || candidateInfo?.examType?.startsWith('RRB_NTPC') || candidateInfo?.examType?.includes('NTPC');
+  const isCGL = candidateInfo?.examType === 'SSC_CGL' || candidateInfo?.examType?.startsWith('SSC_CGL');
 
   // Ediquity timer urgency color
   let timerColorClass = 'text-emerald-700 bg-emerald-50 border-emerald-300';
