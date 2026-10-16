@@ -25,11 +25,13 @@ import {
 import { TOUCH_TYPING_STAGES, TOUCH_TYPING_LESSONS } from '../data/touchTypingData';
 import VirtualKeyboard from './VirtualKeyboard';
 import FingerPlacementTutorial from './FingerPlacementTutorial';
+import LessonFingerDemoModal from './LessonFingerDemoModal';
 
 export default function TouchTypingTrainer() {
   // Navigation Mode: 'roadmap' (Level Grid Map like EdClub) | 'practice' (Active Lesson Player)
   const [viewMode, setViewMode] = useState('roadmap');
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+  const [showDemoModal, setShowDemoModal] = useState(false);
 
   // Active Practice State
   const [typedIndex, setTypedIndex] = useState(0);
@@ -81,7 +83,7 @@ export default function TouchTypingTrainer() {
   };
 
   // Launch a specific lesson
-  const startLesson = (index) => {
+  const startLesson = (index, showDemo = true) => {
     setCurrentLessonIndex(index);
     setTypedIndex(0);
     setMistakeCount(0);
@@ -91,9 +93,13 @@ export default function TouchTypingTrainer() {
     setLastPressedKey('');
     setIsMistake(false);
     setViewMode('practice');
-    setTimeout(() => {
-      if (containerRef.current) containerRef.current.focus();
-    }, 60);
+    if (showDemo) {
+      setShowDemoModal(true);
+    } else {
+      setTimeout(() => {
+        if (containerRef.current) containerRef.current.focus();
+      }, 60);
+    }
   };
 
   // Reset current lesson
@@ -404,6 +410,15 @@ export default function TouchTypingTrainer() {
                 <span>Hand Guide</span>
               </button>
 
+              <button
+                onClick={() => setShowDemoModal(true)}
+                className="flex items-center space-x-1.5 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition shadow-xs"
+                title="Watch 2-3s Animated Finger Demo for this lesson"
+              >
+                <Play className="w-3.5 h-3.5 fill-indigo-600 text-indigo-600" />
+                <span>Finger Demo</span>
+              </button>
+
               <div>
                 <div className="flex items-center space-x-2">
                   <span className="bg-blue-50 text-blue-700 text-xs font-black px-2.5 py-0.5 rounded-full border border-blue-200">
@@ -613,6 +628,22 @@ export default function TouchTypingTrainer() {
           onBack={() => setViewMode('roadmap')}
         />
       )}
+
+      {/* ========================================================= */}
+      {/* VIEW 4: PRE-LESSON REALISTIC FINGER MOTION DEMO MODAL     */}
+      {/* ========================================================= */}
+      <LessonFingerDemoModal
+        lesson={lesson}
+        isOpen={showDemoModal}
+        onClose={() => {
+          setShowDemoModal(false);
+          setTimeout(() => containerRef.current?.focus(), 60);
+        }}
+        onStartPractice={() => {
+          setShowDemoModal(false);
+          setTimeout(() => containerRef.current?.focus(), 60);
+        }}
+      />
 
     </div>
   );
