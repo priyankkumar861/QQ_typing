@@ -330,44 +330,52 @@ function evaluateTyping({
 
   } else if (isCGL) {
     // -------------------------------------------------------------------------
-    // CRITERIA 2: OFFICIAL SSC CGL TIER-II DEST EVALUATION FORMULA
+    // CRITERIA 2: OFFICIAL SSC CGL TIER-II DEST EVALUATION (OFFICIAL SSC RULES)
     // - Applicable to: All CGL posts requiring Data Entry Speed Test (DEST)
     // - Target: 2,000 Key Depressions in 15 Minutes (= 8,000 KDPH / ~27 WPM)
+    // - Penalty / Deduction: NONE! (SSC does NOT deduct words or reduce WPM)
     // - Full Mistake (1.0) & Half Mistake (0.5)
     // - Official Commission Error Cutoffs:
     //   * UR: Max 5% Error (Min 95% Accuracy)
     //   * OBC / EWS: Max 7% Error (Min 93% Accuracy)
     //   * SC / ST / PwD / ESM: Max 10% Error (Min 90% Accuracy)
-    // - Net Speed = Gross WPM - (Total Mistakes / Time in Minutes)
-    // - Qualification: Error % <= Category Cutoff AND Net Speed >= 27 WPM (or 8000 KDPH)
+    // - Speed = Actual Typing Speed (No artificial penalty deduction)
+    // - Qualification: Error % <= Category Cutoff AND Keystrokes >= 2,000 (or Net Speed >= 27 WPM)
     // -------------------------------------------------------------------------
     examDisplayName = "SSC CGL Tier-II DEST";
     requiredWPM = 27;
     requiredKDPH = 8000;
     maxAllowedError = (category === "UR") ? 5.0 : (["OBC", "EWS"].includes(category) ? 7.0 : 10.0);
+    penaltyWordsDeducted = 0;
+    ignoredMistakes = 0;
+    excessMistakes = 0;
 
-    const penaltyWPM = Number((totalMistakes / timeTakenMinutes).toFixed(2));
-    netWPM = Math.max(0, Number((grossWPM - penaltyWPM).toFixed(2)));
+    // In SSC, Speed is NOT reduced by mistakes. Speed is actual typing rate.
+    netWPM = grossWPM;
 
   } else {
     // -------------------------------------------------------------------------
-    // CRITERIA 3: OFFICIAL SSC CHSL TIER-II TYPING EVALUATION FORMULA
+    // CRITERIA 3: OFFICIAL SSC CHSL TIER-II TYPING EVALUATION (OFFICIAL SSC RULES)
     // - Applicable to: SSC CHSL LDC / JSA / Clerk posts
     // - Target: 35 WPM English (10,500 KDPH, 1,750 Keystrokes in 10 Minutes)
     //   [30 WPM Hindi (9,000 KDPH, 1,500 Keystrokes in 10 Minutes)]
+    // - Penalty / Deduction: NONE! (SSC does NOT deduct words or reduce WPM)
     // - Official Commission Error Cutoffs:
     //   * UR: Max 7% Error (Min 93% Accuracy)
     //   * OBC / EWS / SC / ST / PwD: Max 10% Error (Min 90% Accuracy)
-    // - Net Speed = Gross WPM - (Total Mistakes / Time in Minutes)
-    // - Qualification: Error % <= Category Cutoff AND Net Speed >= 35 WPM
+    // - Speed = Actual Typing Speed (No artificial penalty deduction)
+    // - Qualification: Error % <= Category Cutoff AND Speed >= 35 WPM
     // -------------------------------------------------------------------------
     examDisplayName = "SSC CHSL Tier-II Typing Test";
     requiredWPM = 35;
     requiredKDPH = 10500;
     maxAllowedError = (category === "UR") ? 7.0 : 10.0;
+    penaltyWordsDeducted = 0;
+    ignoredMistakes = 0;
+    excessMistakes = 0;
 
-    const penaltyWPM = Number((totalMistakes / timeTakenMinutes).toFixed(2));
-    netWPM = Math.max(0, Number((grossWPM - penaltyWPM).toFixed(2)));
+    // In SSC, Speed is NOT reduced by mistakes. Speed is actual typing rate.
+    netWPM = grossWPM;
   }
 
   // Accuracy %

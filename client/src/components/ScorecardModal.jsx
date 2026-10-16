@@ -659,8 +659,8 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                       </div>
                     </div>
                   </div>
-                  <p className="text-[11px] text-blue-200/80 pt-1 leading-relaxed">
-                    ⚡ <strong>SSC CGL DEST Rule:</strong> 15-minute examination. Commission cutoffs: UR: 5% max error | OBC/EWS: 7% max error | SC/ST/PwD: 10% max error. Candidates must achieve error rate ≤ cutoff and maintain speed benchmark (~27 WPM / 8,000 KDPH). Backspace is permitted.
+                  <p className="text-[11px] text-blue-200/90 pt-1 leading-relaxed">
+                    ⚡ <strong>Official SSC Rule (Zero Deductions):</strong> Unlike Railway RRB, SSC does <u>NOT</u> deduct words or penalize your speed for mistakes. Your speed is your actual typing rate ({result.grossWPM} WPM). SSC evaluates you purely on <strong>Error Percentage</strong> against Commission cutoffs (UR: 5% | OBC/EWS: 7% | SC/ST/PwD: 10%) and completing the 2,000 keystrokes test.
                   </p>
                 </div>
               ) : (
@@ -677,7 +677,7 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center font-mono">
                     <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
-                      <div className="text-[10px] text-slate-400">Net Speed</div>
+                      <div className="text-[10px] text-slate-400">Typing Speed</div>
                       <div className="text-white font-bold text-sm">{result.netWPM} WPM</div>
                     </div>
                     <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-700">
@@ -695,8 +695,8 @@ export default function ScorecardModal({ result, onClose, onRetake }) {
                       </div>
                     </div>
                   </div>
-                  <p className="text-[11px] text-emerald-200/80 pt-1 leading-relaxed">
-                    ⚡ <strong>SSC CHSL Rule:</strong> 10-minute examination. Benchmark speed: 35 WPM English (10,500 KDPH) / 30 WPM Hindi. Commission error cutoffs: UR: 7% max error | OBC/EWS/SC/ST/PwD: 10% max error. Qualification requires meeting BOTH speed (≥35 WPM) and error thresholds. Backspace is permitted.
+                  <p className="text-[11px] text-emerald-200/90 pt-1 leading-relaxed">
+                    ⚡ <strong>Official SSC Rule (Zero Deductions):</strong> Unlike Railway RRB, SSC does <u>NOT</u> deduct words or penalize your speed for mistakes. Your speed is your actual typing rate ({result.grossWPM} WPM). SSC evaluates you purely on <strong>Error Percentage</strong> against Commission cutoffs (UR: 7% | OBC/EWS/SC/ST/PwD: 10%) and achieving ≥ 35 WPM.
                   </p>
                 </div>
               )}
